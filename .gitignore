@@ -1,0 +1,8 @@
+.DS_Store
+*.log
+*.err
+
+build/
+**/build/
+**/target/
+
