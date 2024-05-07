@@ -1,8 +1,99 @@
-.DS_Store
-*.log
-*.err
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+## All of Xcode
 build/
-**/build/
-**/target/
+DerivedData/
+
+## Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcscmblueprint
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline
+playground.xcworkspace
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/readme.md
+
+# Yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Swift Package Manager
+.build/
+
+# Package.resolved file created by Xcode's SwiftPM integration
+# from Xcode 12 onwards, might not be needed in the future if Xcode handles it better
+*.resolved
+!xcshareddata/swiftpm/Package.resolved
+
+# .swiftpm/xcode/package.xcworkspace - Generated on demand by Swift Package Manager
+.swiftpm/xcode
+
+# Code Coverage
+htmlcov/
+cov/
+*.coverage
+*.coverage.*
+!*.coverage.json
+coverage.xml
+*.lcov
+
+# Testing
+*.hprof
+ui_failures/
+
+# Misc
+*.swp
+*.bak
+*.tmp
+*.rbenv-vars
+*.env.local
+.env
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear on disk but not in a project
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 

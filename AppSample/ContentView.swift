@@ -6,66 +6,79 @@
 //
 
 import SwiftUI
+import AuthenticationServices
+import AppAuthCore
+
 
 struct ContentView: View {
+    var appDelegate: AppDelegate
     
-    @State private var seconds = 0
-    @State private var countdown = 30
-    @State private var codeNumber = Int.random(in: 100000...999999)
+    @State private var isAuthorized: Bool = false
     
-    @State private var progressValue: Float = 1.0
-    
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
+    // callback
+    func changeAuthenticationState(_ authorized: Bool) {
+        self.isAuthorized = authorized
+    }
     
     var body: some View {
         
         // --
         VStack {
             
-            VStack {
-                FeatureItem(title: "ID Tokens")
-                FeatureItem(title: "Access Token")
-                FeatureItem(title: "Refresh Token")
-                FeatureItem(title: "Seeds")
-            }
+            Text("authorized: \(isAuthorized ? "true" : "false")")
             
-            Text("\(countdown)")
-                .font(.largeTitle)
-                .onReceive(timer) { _ in
-                    
-//                    let seconds = Calendar.current.component(.second, from: Date())
-                    seconds = Calendar.current.component(.second, from: Date())
-                    let nextReset = (seconds >= 30 ? 60 : 30)
-                    self.countdown = nextReset - seconds
-                    
-                    if countdown == 30 || countdown == 60 {
-                        self.codeNumber = Int.random(in: 100000...999999)
-                    }
-                    self.progressValue = Float(countdown) / 30.0
-                    
+            Group {
+                if isAuthorized {
+                    Dashboard(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState)
+                } else {
+                    OAuthView(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState)
                 }
-                .padding()
-                .background(self.countdown < 10 ? Color.red : Color.clear)
-                .animation(.default, value: countdown)
-            
-            
-            Text("Code: \(codeNumber)")
-                .font(.title)
-                .padding()
-            
-            ProgressBarView(value: $progressValue)
-                .frame(height: 20)
-                .padding()
-
+            }
+                        
+        }.onAppear{
+            changeAuthenticationState(appDelegate.isAuthorized())
         }
         
         // --
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+
+//struct ContentView_Previews: PreviewProvider {
+//    
+//    class MockAppDelegate: UIResponder, UIApplicationDelegate {
+//        // Add any necessary mock properties here
+//    }
+//    
+//    static var previews: some View {
+//        ContentView(appDelegate: UIApplication.shared.delegate as! AppDelegate)
+//    }
+//}
+
+//
+func decodeJWT(_ token: String) -> [String: Any]? {
+    let segments = token.components(separatedBy: ".")
+    guard segments.count > 1 else { return nil }
+    
+    var base64String = segments[1]
+    let requiredLength = Int(4 * ceil(Float(base64String.count) / 4.0))
+    let paddingLength = requiredLength - base64String.count
+    if paddingLength > 0 {
+        let padding = String(repeating: "=", count: paddingLength)
+        base64String += padding
+    }
+    
+    guard let data = Data(base64Encoded: base64String) else { return nil }
+    
+    do {
+        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+        return jsonObject as? [String: Any]
+    } catch {
+        print("Error decoding JSON: \(error)")
+        return nil
     }
 }
+
+//func value<T>(from dictionary: [String: Any], forKey key: String) -> T? {
+//    return dictionary[key] as? T
+//}
