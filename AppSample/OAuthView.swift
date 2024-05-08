@@ -53,12 +53,12 @@ struct OAuthView: View {
                             
                             changeAuthenticationState(true)
                             
-                            print("Got authorization tokens. Access token: " +
-                                  "\(authState.lastTokenResponse?.accessToken ?? "nil")")
-
-                            print("-----")
-                            print("Got authorization tokens. Access token: " + "\(String(describing: authState))")
-                            print("-----")
+//                            print("Got authorization tokens. Access token: " +
+//                                  "\(authState.lastTokenResponse?.accessToken ?? "nil")")
+//
+//                            print("-----")
+//                            print("Got authorization tokens. Access token: " + "\(String(describing: authState))")
+//                            print("-----")
 
                             
                             // chamar userinfo

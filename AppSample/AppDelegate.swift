@@ -19,12 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let savedAuthState = getAuthStateFromKeychain() {
             authState = savedAuthState
             decodeToken()
-            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState?.isAuthorized))")
-            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState?.lastTokenResponse?.accessTokenExpirationDate))")
-            print("*** AppDelegate INIT: Date now is: \(Date())")
-            
-            self.authState?.setNeedsTokenRefresh()
-            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState))")
+//            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState?.isAuthorized))")
+//            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState?.lastTokenResponse?.accessTokenExpirationDate))")
+//            print("*** AppDelegate INIT: Date now is: \(Date())")
+//            
+//            self.authState?.setNeedsTokenRefresh()
+//            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState))")
             
             if let accessTokenExpirationDate = authState?.lastTokenResponse?.accessTokenExpirationDate,
                accessTokenExpirationDate > Date() {

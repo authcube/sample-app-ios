@@ -25,7 +25,7 @@ struct ContentView: View {
         // --
         VStack {
             
-            Text("authorized: \(isAuthorized ? "true" : "false")")
+//            Text("authorized: \(isAuthorized ? "true" : "false")")
             
             Group {
                 if isAuthorized {
