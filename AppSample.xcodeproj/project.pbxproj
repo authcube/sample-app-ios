@@ -19,6 +19,7 @@
 		FA67C1A42BD016430083FA5B /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA67C1A32BD016430083FA5B /* ProgressBarView.swift */; };
 		FA84D79A2BEA824300B671E4 /* AuthTokenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA84D7992BEA824300B671E4 /* AuthTokenHelper.swift */; };
 		FA87894E2BE51EC80059DF4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA87894D2BE51EC80059DF4F /* AppDelegate.swift */; };
+		FA9157FF2BEF847900AC6DEA /* VerifyTOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9157FE2BEF847900AC6DEA /* VerifyTOTP.swift */; };
 		FAD9F7592BEEA72F00CE85D5 /* SeedsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD9F7582BEEA72F00CE85D5 /* SeedsDetailView.swift */; };
 		FAD9F75C2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */; };
 		FAD9F75D2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -51,6 +52,7 @@
 		FA67C1A32BD016430083FA5B /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		FA84D7992BEA824300B671E4 /* AuthTokenHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTokenHelper.swift; sourceTree = "<group>"; };
 		FA87894D2BE51EC80059DF4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FA9157FE2BEF847900AC6DEA /* VerifyTOTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyTOTP.swift; sourceTree = "<group>"; };
 		FAD9F7582BEEA72F00CE85D5 /* SeedsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedsDetailView.swift; sourceTree = "<group>"; };
 		FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = "authfy-sdk-2.4.0.xcframework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,6 +103,7 @@
 				FA287A7B2BE922B9004A2B74 /* Dashboard.swift */,
 				FA84D7992BEA824300B671E4 /* AuthTokenHelper.swift */,
 				FAD9F7582BEEA72F00CE85D5 /* SeedsDetailView.swift */,
+				FA9157FE2BEF847900AC6DEA /* VerifyTOTP.swift */,
 			);
 			path = AppSample;
 			sourceTree = "<group>";
@@ -194,6 +197,7 @@
 				FA67C1962BD000F00083FA5B /* ContentView.swift in Sources */,
 				FA67C1A42BD016430083FA5B /* ProgressBarView.swift in Sources */,
 				FA287A7C2BE922B9004A2B74 /* Dashboard.swift in Sources */,
+				FA9157FF2BEF847900AC6DEA /* VerifyTOTP.swift in Sources */,
 				FA84D79A2BEA824300B671E4 /* AuthTokenHelper.swift in Sources */,
 				FA67C1942BD000F00083FA5B /* AppSampleApp.swift in Sources */,
 				FA87894E2BE51EC80059DF4F /* AppDelegate.swift in Sources */,

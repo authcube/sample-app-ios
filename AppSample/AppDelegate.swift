@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            print("*** AppDelegate INIT: Date now is: \(Date())")
 //            
 //            self.authState?.setNeedsTokenRefresh()
-//            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState))")
+            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState?.lastTokenResponse?.accessToken))")
             
             if let accessTokenExpirationDate = authState?.lastTokenResponse?.accessTokenExpirationDate,
                accessTokenExpirationDate > Date() {

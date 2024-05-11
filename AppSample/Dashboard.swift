@@ -17,6 +17,7 @@ struct Dashboard: View {
     // state
     @State private var userInfo: [String: Any] = [:]
     @State private var isLoading = false
+    @State private var showVerifyTOTP = false
     
     @State private var seconds = 0
     @State private var countdown = 30
@@ -188,6 +189,10 @@ struct Dashboard: View {
             ProgressBarView(value: $progressValue)
                 .frame(height: 20)
                 .padding()
+            
+            
+            VerifyTOTP(appDelegate: appDelegate)
+            
             
             Button {
                 
