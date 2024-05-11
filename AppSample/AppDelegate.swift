@@ -2,6 +2,7 @@ import UIKit
 import Security
 
 import AppAuthCore
+import AuthfySdk
 
 //@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -10,6 +11,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // property of the app's AppDelegate
     var currentAuthorizationFlow: OIDExternalUserAgentSession?
+    var authfySdk: AuthfySdk = AuthfySdk()
     private var authState: OIDAuthState?
     private var tokenDecoded: [String: Any]?
     
@@ -33,8 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else {
                 // Token de acesso expirou ou não está disponível
                 print("*** AppDelegate INIT: Token de acesso expirou ou não está disponível")
-                self.authState?.setNeedsTokenRefresh()
-                print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState))")
+//                self.authState?.setNeedsTokenRefresh()
+//                print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState))")
             }
             
 //            checkTokenValidity(authState: authState!) { isAccessTokenValid, isRefreshTokenAvailable in

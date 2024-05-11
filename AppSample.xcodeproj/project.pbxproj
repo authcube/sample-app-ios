@@ -19,7 +19,24 @@
 		FA67C1A42BD016430083FA5B /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA67C1A32BD016430083FA5B /* ProgressBarView.swift */; };
 		FA84D79A2BEA824300B671E4 /* AuthTokenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA84D7992BEA824300B671E4 /* AuthTokenHelper.swift */; };
 		FA87894E2BE51EC80059DF4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA87894D2BE51EC80059DF4F /* AppDelegate.swift */; };
+		FAD9F7592BEEA72F00CE85D5 /* SeedsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD9F7582BEEA72F00CE85D5 /* SeedsDetailView.swift */; };
+		FAD9F75C2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */; };
+		FAD9F75D2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FAD9F75E2BEEC31800CE85D5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FAD9F75D2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		FA0257172BE183C80086D77C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -34,6 +51,8 @@
 		FA67C1A32BD016430083FA5B /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		FA84D7992BEA824300B671E4 /* AuthTokenHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTokenHelper.swift; sourceTree = "<group>"; };
 		FA87894D2BE51EC80059DF4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FAD9F7582BEEA72F00CE85D5 /* SeedsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedsDetailView.swift; sourceTree = "<group>"; };
+		FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = "authfy-sdk-2.4.0.xcframework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAD9F75C2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Frameworks */,
 				FA02571A2BE184500086D77C /* AppAuth in Frameworks */,
 				FA02571C2BE184500086D77C /* AppAuthCore in Frameworks */,
 			);
@@ -68,6 +88,7 @@
 		FA67C1922BD000F00083FA5B /* AppSample */ = {
 			isa = PBXGroup;
 			children = (
+				FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */,
 				FA0257172BE183C80086D77C /* Info.plist */,
 				FA67C1932BD000F00083FA5B /* AppSampleApp.swift */,
 				FA67C1952BD000F00083FA5B /* ContentView.swift */,
@@ -79,6 +100,7 @@
 				FA287A792BE912D7004A2B74 /* OAuthView.swift */,
 				FA287A7B2BE922B9004A2B74 /* Dashboard.swift */,
 				FA84D7992BEA824300B671E4 /* AuthTokenHelper.swift */,
+				FAD9F7582BEEA72F00CE85D5 /* SeedsDetailView.swift */,
 			);
 			path = AppSample;
 			sourceTree = "<group>";
@@ -101,6 +123,7 @@
 				FA67C18C2BD000F00083FA5B /* Sources */,
 				FA67C18D2BD000F00083FA5B /* Frameworks */,
 				FA67C18E2BD000F00083FA5B /* Resources */,
+				FAD9F75E2BEEC31800CE85D5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -174,6 +197,7 @@
 				FA84D79A2BEA824300B671E4 /* AuthTokenHelper.swift in Sources */,
 				FA67C1942BD000F00083FA5B /* AppSampleApp.swift in Sources */,
 				FA87894E2BE51EC80059DF4F /* AppDelegate.swift in Sources */,
+				FAD9F7592BEEA72F00CE85D5 /* SeedsDetailView.swift in Sources */,
 				FA287A7A2BE912D7004A2B74 /* OAuthView.swift in Sources */,
 				FA67C1A22BD0131C0083FA5B /* FeatureItem.swift in Sources */,
 			);

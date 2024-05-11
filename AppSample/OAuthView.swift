@@ -38,7 +38,7 @@ struct OAuthView: View {
                     let request = OIDAuthorizationRequest(configuration: configuration! ,
                                                           clientId: "ObYHVcSYqPfhBIsOU6hjWOO0",
                                                           clientSecret: nil,
-                                                          scopes: [OIDScopeOpenID, OIDScopeProfile],
+                                                          scopes: [OIDScopeOpenID, OIDScopeProfile, "roles"],
                                                           redirectURL: NSURL(string:  "br.com.sec4you.authfy.app.AppSample:/oauth2redirect")! as URL,
                                                           responseType: OIDResponseTypeCode,
                                                           additionalParameters: nil)
@@ -53,8 +53,8 @@ struct OAuthView: View {
                             
                             changeAuthenticationState(true)
                             
-//                            print("Got authorization tokens. Access token: " +
-//                                  "\(authState.lastTokenResponse?.accessToken ?? "nil")")
+                            print("Got authorization tokens. Access token: " +
+                                  "\(authState.lastTokenResponse?.accessToken ?? "nil")")
 //
 //                            print("-----")
 //                            print("Got authorization tokens. Access token: " + "\(String(describing: authState))")

@@ -12,13 +12,16 @@ struct Dashboard: View {
     var appDelegate: AppDelegate
     var changeAuthenticationState: (Bool) -> Void
     
+    @State private var showingDetail = false
+    
     // state
-    @State private var userInfo:    [String: Any] = [:]
+    @State private var userInfo: [String: Any] = [:]
     @State private var isLoading = false
     
     @State private var seconds = 0
     @State private var countdown = 30
-    @State private var codeNumber = Int.random(in: 100000...999999)
+//    @State private var codeNumber = Int.random(in: 100000...999999)
+    @State private var codeNumber: String = "No seed"
     
     @State private var progressValue: Float = 1.0
     
@@ -33,6 +36,7 @@ struct Dashboard: View {
             
             if error != nil  {
                 print("Error fetching fresh tokens: \(error?.localizedDescription ?? "Unknown error")")
+                changeAuthenticationState(false)
                 return
             }
             guard let accessToken = accessToken else {
@@ -106,8 +110,8 @@ struct Dashboard: View {
             .cornerRadius(10)
             
             VStack {
-//                Text("Username: \(self.appDelegate.getUsername())")
-
+                //                Text("Username: \(self.appDelegate.getUsername())")
+                
                 if isLoading {
                     ProgressView("Carregando...")
                 } else {
@@ -118,16 +122,32 @@ struct Dashboard: View {
                     }
                     // Você pode adicionar mais campos conforme necessário
                 }
-
-                FeatureItem(title: "ID Tokens")
-                FeatureItem(title: "Access Token")
-                FeatureItem(title: "Refresh Token")
-                FeatureItem(title: "Seeds")
+                
+                FeatureItem(title: "ID Tokens") {
+                    showingDetail = true
+                }
+                
+                FeatureItem(title: "Access Token") {}
+                FeatureItem(title: "Refresh Token") {}
+                FeatureItem(title: "Seeds") {
+                    showingDetail = true
+                }.sheet(isPresented: $showingDetail) {
+                    SeedsDetailView(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState, isPresented: $showingDetail)
+                }
             }
             
             Text("\(countdown)")
                 .font(.largeTitle)
                 .onReceive(timer) { _ in
+                    
+                    if self.codeNumber == "No seed" && appDelegate.authfySdk.hasSeed() {
+                        do {
+                            self.codeNumber = try appDelegate.authfySdk.generateTOTP()
+                        } catch {
+                            self.codeNumber = "Error generating TOTP"
+                            print("Error generating TOTP")
+                        }
+                    }
                     
                     // let seconds = Calendar.current.component(.second, from: Date())
                     seconds = Calendar.current.component(.second, from: Date())
@@ -135,7 +155,13 @@ struct Dashboard: View {
                     self.countdown = nextReset - seconds
                     
                     if countdown == 30 || countdown == 60 {
-                        self.codeNumber = Int.random(in: 100000...999999)
+//                        self.codeNumber = Int.random(in: 100000...999999)
+                        do {
+                            self.codeNumber = try appDelegate.authfySdk.generateTOTP()
+                        } catch {
+                            self.codeNumber = "Error generating TOTP"
+                            print("Error generating TOTP")
+                        }
                     }
                     self.progressValue = Float(countdown) / 30.0
                     
@@ -146,9 +172,18 @@ struct Dashboard: View {
                 .clipShape(Circle())
             
             
-            Text("Code: \(codeNumber)")
-                .font(.title)
-                .padding()
+            if appDelegate.authfySdk.hasSeed() {
+                
+                Text("Code: \(codeNumber)")
+                    .font(.title)
+                    .padding()
+                
+            } else {
+            
+                Text("Code: No Seed")
+                    .font(.title)
+                    .padding()
+            }
             
             ProgressBarView(value: $progressValue)
                 .frame(height: 20)

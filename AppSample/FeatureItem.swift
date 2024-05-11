@@ -9,19 +9,25 @@ import SwiftUI
 
 struct FeatureItem: View {
     var title: String
+    
+    var action: () -> Void
+    
     var body: some View {
-        HStack {
-            Image(systemName: "plus.circle.fill")
-            Text(title)
-            Spacer()
-            Image(systemName: "checkmark")
+        Button(action: action) {
+            HStack {
+                Image(systemName: "plus.circle.fill")
+                Text(title)
+                Spacer()
+                Image(systemName: "checkmark")
+            }
+            .padding()
         }
-        .padding()
+        
     }
 }
 
-struct FeatureItem_Previews: PreviewProvider {
-    static var previews: some View {
-        FeatureItem(title: "test")
-    }
-}
+//struct FeatureItem_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FeatureItem(title: "test")
+//    }
+//}
