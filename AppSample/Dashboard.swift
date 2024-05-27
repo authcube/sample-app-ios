@@ -25,6 +25,9 @@ struct Dashboard: View {
     @State private var codeNumber: String = "No seed"
     
     @State private var progressValue: Float = 1.0
+
+    // copy button for TOTP
+    @State private var showCopySuccess = false
     
     // timer
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -90,8 +93,38 @@ struct Dashboard: View {
     // --
     
     
+    // -- getIdToken
+    func getIdToken() -> String {
+        
+        let idToken: String = appDelegate.getAuthState()?.lastTokenResponse?.idToken ?? ""
+        print("ID Token: [\(idToken)]")
+        
+        return idToken
+    }
+    //-
+    
+    // -- getAccessToken
+    func getAccessToken() -> String {
+        
+        let accessToken: String = appDelegate.getAuthState()?.lastTokenResponse?.accessToken ?? ""
+        print("Access Token: [\(accessToken)]")
+        
+        return accessToken
+    }
+    //-
+    
+    // -- getAccessToken
+    func getRefreshToken() -> String {
+        
+        let refreshToken: String = appDelegate.getAuthState()?.lastTokenResponse?.refreshToken ?? ""
+        print("Access Token: [\(refreshToken)]")
+        
+        return refreshToken
+    }
+    //-
     
     var body: some View {
+        
         
         VStack {
             
@@ -111,73 +144,102 @@ struct Dashboard: View {
             .cornerRadius(10)
             
             VStack {
-                //                Text("Username: \(self.appDelegate.getUsername())")
-                
+
                 if isLoading {
                     ProgressView("Carregando...")
                 } else {
                     if let name = userInfo["uid"] as? String {
                         Text("Username: \(name)")
                     } else {
-                        Text("Informação não disponível")
+                        Text("Click 'Get User Info', to fetch the 'username'")
                     }
                     // Você pode adicionar mais campos conforme necessário
                 }
                 
-                FeatureItem(title: "ID Tokens") {
-                    showingDetail = true
-                }
+                // ID Tokens
+                FeatureItem(title: "ID Tokens", action: {}, copyAction: {
+                    
+                    let id_token = getIdToken()
+                    
+                    if id_token.isEmpty {
+                        print("no id token")
+                    } else {
+                        UIPasteboard.general.string = id_token
+                    }
+                })
                 
-                FeatureItem(title: "Access Token") {}
-                FeatureItem(title: "Refresh Token") {}
-                FeatureItem(title: "Seeds") {
+                // Access Tokens
+                FeatureItem(title: "Access Token", action: {}, copyAction: {
+                    let access_token = getAccessToken()
+                    
+                    if access_token.isEmpty {
+                        print("no access token")
+                    } else {
+                        UIPasteboard.general.string = access_token
+                    }
+                })
+                
+                // Refresh Token
+                FeatureItem(title: "Refresh Token", action: {}, copyAction: {
+                    let refresh_token = getRefreshToken()
+                    
+                    if refresh_token.isEmpty {
+                        print("no refresh token")
+                    } else {
+                        UIPasteboard.general.string = refresh_token
+                    }
+                })
+                
+                // Seed
+                FeatureItem(title: "Seeds", action:  {
                     showingDetail = true
-                }.sheet(isPresented: $showingDetail) {
+                }, showCopyButton: false, copyAction: {})
+                .sheet(isPresented: $showingDetail) {
                     SeedsDetailView(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState, isPresented: $showingDetail)
                 }
             }
             
-            Text("\(countdown)")
-                .font(.largeTitle)
-                .onReceive(timer) { _ in
-                    
-                    if self.codeNumber == "No seed" && appDelegate.authfySdk.hasSeed() {
-                        do {
-                            self.codeNumber = try appDelegate.authfySdk.generateTOTP()
-                        } catch {
-                            self.codeNumber = "Error generating TOTP"
-                            print("Error generating TOTP")
-                        }
-                    }
-                    
-                    // let seconds = Calendar.current.component(.second, from: Date())
-                    seconds = Calendar.current.component(.second, from: Date())
-                    let nextReset = (seconds >= 30 ? 60 : 30)
-                    self.countdown = nextReset - seconds
-                    
-                    if countdown == 30 || countdown == 60 {
-//                        self.codeNumber = Int.random(in: 100000...999999)
-                        do {
-                            self.codeNumber = try appDelegate.authfySdk.generateTOTP()
-                        } catch {
-                            self.codeNumber = "Error generating TOTP"
-                            print("Error generating TOTP")
-                        }
-                    }
-                    self.progressValue = Float(countdown) / 30.0
-                    
-                }
-                .padding()
-                .background(self.countdown < 10 ? Color.red : Color.clear)
-                .animation(.default, value: countdown)
-                .clipShape(Circle())
-            
-            
             if appDelegate.authfySdk.hasSeed() {
-                
-                Text("Code: \(codeNumber)")
-                    .font(.title)
+
+                Text("\(countdown)")
+                    .font(.largeTitle)
                     .padding()
+                    .background(self.countdown < 10 ? Color.red : Color.clear)
+                    .animation(.default, value: countdown)
+                    .clipShape(Circle())
+
+                
+                HStack {
+                    Text("Code: \(codeNumber)")
+                        .font(.title)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        UIPasteboard.general.string = codeNumber
+                        showCopySuccess = true
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            showCopySuccess = false
+                        }
+                    }) {
+                        Image(systemName: "doc.on.doc") // Ícone de copiar
+                            .font(.title2) // Ajuste o tamanho conforme necessário
+                            .accessibility(label: Text("Copiar para Área de Transferência"))
+                    }
+                    
+                    if showCopySuccess {
+                        Text("Copiado!")
+                            .foregroundColor(.green)
+                    }
+                }.padding(.horizontal)
+                
+                ProgressBarView(value: $progressValue)
+                    .frame(height: 20)
+                    .padding()
+                
+                
+                VerifyTOTP(appDelegate: appDelegate)
                 
             } else {
             
@@ -186,17 +248,11 @@ struct Dashboard: View {
                     .padding()
             }
             
-            ProgressBarView(value: $progressValue)
-                .frame(height: 20)
-                .padding()
-            
-            
-            VerifyTOTP(appDelegate: appDelegate)
             
             
             Button {
                 
-                appDelegate.deleteAuthStateFromKeychain()
+//                appDelegate.deleteAuthStateFromKeychain()
                 changeAuthenticationState(false)
                 
             } label: {
@@ -209,19 +265,62 @@ struct Dashboard: View {
             .cornerRadius(10)
             
         } // VStack
-        .onAppear{
-            fetchUserInfo()
+        .onAppear {
+//            fetchUserInfo()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                if appDelegate.authfySdk.hasSeed() {
+                    do {
+                        self.codeNumber = try appDelegate.authfySdk.generateTOTP()
+                    } catch {
+                        self.codeNumber = "No seed"
+                        print("Error generating TOTP onAppear")
+                    }
+                }
+            }
+            
         }
+        .onReceive(timer) { _ in
+            
+            if self.codeNumber == "No seed" && appDelegate.authfySdk.hasSeed() {
+                do {
+                    self.codeNumber = try appDelegate.authfySdk.generateTOTP()
+                    print("code: \(self.codeNumber)")
+                } catch {
+                    self.codeNumber = "No seed"
+                    print("Error generating TOTP")
+                }
+            }
+            
+            // let seconds = Calendar.current.component(.second, from: Date())
+            seconds = Calendar.current.component(.second, from: Date())
+            let nextReset = (seconds >= 30 ? 60 : 30)
+            self.countdown = nextReset - seconds
+            
+            if countdown == 30 || countdown == 60 {
+                //                        self.codeNumber = Int.random(in: 100000...999999)
+                do {
+                    self.codeNumber = try appDelegate.authfySdk.generateTOTP()
+                    print("code: \(self.codeNumber)")
+                } catch {
+                    self.codeNumber = "No Seed"
+                    print("Error generating TOTP")
+                }
+            }
+            self.progressValue = Float(countdown) / 30.0
+            
+        }
+
     }
 }
 
-struct Dashboard_Previews: PreviewProvider {
-    
-    class MockAppDelegate: UIResponder, UIApplicationDelegate {
-        // Add any necessary mock properties here
-    }
-    
-    static var previews: some View {
-        Dashboard(appDelegate: UIApplication.shared.delegate as! AppDelegate, changeAuthenticationState: { _ in })
-    }
-}
+//struct Dashboard_Previews: PreviewProvider {
+//
+//    class MockAppDelegate: UIResponder, UIApplicationDelegate {
+//        // Add any necessary mock properties here
+//    }
+//
+//    static var previews: some View {
+//        Dashboard(appDelegate: UIApplication.shared.delegate as! AppDelegate, changeAuthenticationState: { _ in })
+//    }
+//}

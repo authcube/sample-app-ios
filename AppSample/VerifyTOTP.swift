@@ -12,7 +12,6 @@ struct VerifyTOTP: View {
     var appDelegate: AppDelegate
     
     @State private var numberInput: String = ""
-    @State private var result: String = ""
     @State private var isLoading = false
     
     @State private var showAlert = false
@@ -36,7 +35,7 @@ struct VerifyTOTP: View {
             if isLoading {
                 
                 Text("Verifying ...")
-                    .font(.title)
+                    .font(.caption2)
                 
             } else {
                 Button("Verify") {
@@ -48,11 +47,8 @@ struct VerifyTOTP: View {
                 .foregroundColor(.white)
                 .cornerRadius(8)
             }
-            
-            // Exibe o resultado do processamento
-            Text(result)
-                .padding()
         }
+        .padding(.horizontal)
         .alert("Verification", isPresented: $showAlert) {
             Button("OK", role: .cancel) { showAlert = false }
         } message: {
@@ -73,6 +69,7 @@ struct VerifyTOTP: View {
                 return
             }
             guard let accessToken = accessToken else {
+                print("VerifyTOTP - unable to get accessToken")
                 return
             }
             
@@ -93,6 +90,9 @@ struct VerifyTOTP: View {
             // Perform request...
             let session = URLSession.shared
             let task = session.dataTask(with: urlRequest) { data, response, error in
+                
+                isLoading = false
+                
                 // Verifique se houve algum erro
                 if let error = error {
                     print("Erro ao fazer a solicitação: \(error)")
@@ -131,17 +131,18 @@ struct VerifyTOTP: View {
                 } else {
                     // Lidar com resposta HTTP diferente de 200 OK
                     if let httpResponse = response as? HTTPURLResponse {
-                        print("HTTP Status Code: \(httpResponse.statusCode)")
+                        print("VerifyTOTP - HTTP Status Code: \(httpResponse.statusCode)")
                     }
                     
                     alertMessage = "The code [\(numberInput)] is NOT valid"
                     showAlert = true
-
+                    
                 }
                 
             }
             
             // Iniciar a tarefa
+            isLoading = true
             task.resume()
             
         }

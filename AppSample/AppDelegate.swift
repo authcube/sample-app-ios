@@ -35,32 +35,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else {
                 // Token de acesso expirou ou não está disponível
                 print("*** AppDelegate INIT: Token de acesso expirou ou não está disponível")
-//                self.authState?.setNeedsTokenRefresh()
-//                print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState))")
+//                deleteAuthStateFromKeychain()
             }
-            
-//            checkTokenValidity(authState: authState!) { isAccessTokenValid, isRefreshTokenAvailable in
-//                print("Validade do Token de Acesso: \(isAccessTokenValid)")
-//                print("Disponibilidade do Token de Refresh: \(isRefreshTokenAvailable)")
-//                
-//                if !isRefreshTokenAvailable {
-//                    self.authState = nil
-//                    self.deleteAuthStateFromKeychain()
-//                } else {
-//                    print("try to refresh token")
-//                }
-//            }
 
-            
         } else {
             print("*** AppDelegate INIT: impossible to load last State ***")
         }
         
-        print("*** AppDelegate INIT ***")
+        print("*** AppDelegate INIT - finished ***")
         
     }
     
     func setAuthState(_ _authState: OIDAuthState?) {
+        
+        if _authState == nil {
+            return
+        }
+        
         self.authState = _authState
         saveAuthStateToKeychain(authState: _authState!)
         decodeToken()
@@ -193,6 +184,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // Função para excluir o OIDAuthState do Keychain
     func deleteAuthStateFromKeychain() {
+        
+        print("Removing auth information from keychain")
+        
         var query = [String: Any]()
         query[kSecClass as String] = kSecClassGenericPassword
         query[kSecAttrService as String] = keychainServiceName

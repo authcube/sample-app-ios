@@ -202,7 +202,11 @@ struct SeedsDetailView: View {
         
         VStack {
             
+            Spacer()
+            
             Text("Seeds")
+            
+            Spacer()
             
             if !errorMessage.isEmpty {
                 Text("Error: \(errorMessage)")
@@ -255,6 +259,8 @@ struct SeedsDetailView: View {
             .background(Color(#colorLiteral(red: 0.82, green: 0.18, blue: 0.18, alpha: 1)))
             .foregroundColor(.white)
             .cornerRadius(10)
+            
+            Spacer()
         }
         .onAppear{
             hasSeed = appDelegate.authfySdk.hasSeed()

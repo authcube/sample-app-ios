@@ -65,6 +65,10 @@ struct OAuthView: View {
                             
                         } else {
                             print("Authorization error: \(error?.localizedDescription ?? "Unknown error")")
+                            
+                            print("-----")
+                            print("DOUBLE CHECK YOUR SERVER TIMEZONE CONFIG")
+                            print("-----")
                             //                            self.setAuthState(nil)
                             self.appDelegate.setAuthState(nil)
                             
@@ -89,12 +93,12 @@ struct OAuthView: View {
     }
 }
 
-struct OAuthView_Previews: PreviewProvider {
-    class MockAppDelegate: UIResponder, UIApplicationDelegate {
-        // Add any necessary mock properties here
-    }
-    
-    static var previews: some View {
-        OAuthView(appDelegate: UIApplication.shared.delegate as! AppDelegate, changeAuthenticationState: { _ in })
-    }
-}
+//struct OAuthView_Previews: PreviewProvider {
+//    class MockAppDelegate: UIResponder, UIApplicationDelegate {
+//        // Add any necessary mock properties here
+//    }
+//
+//    static var previews: some View {
+//        OAuthView(appDelegate: UIApplication.shared.delegate as! AppDelegate, changeAuthenticationState: { _ in })
+//    }
+//}
