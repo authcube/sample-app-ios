@@ -12,13 +12,13 @@ struct Dashboard: View {
     var appDelegate: AppDelegate
     var changeAuthenticationState: (Bool) -> Void
     
-    @State private var showingDetail = false
     
     // state
     @State private var userInfo: [String: Any] = [:]
     @State private var isLoading = false
     @State private var showVerifyTOTP = false
-    
+    @State private var showingDetail = false
+
     @State private var seconds = 0
     @State private var countdown = 30
 //    @State private var codeNumber = Int.random(in: 100000...999999)
@@ -32,10 +32,15 @@ struct Dashboard: View {
     // timer
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
+    // AppStorage
+    @AppStorage("url_idp") private var urlIdp: String = ""
+    @AppStorage("client_secret") private var clientSecret: String = ""
+
+    
     
     // --
     func fetchUserInfo() {
-        let userinfoEndpoint = URL(string:"https://newpst.authfy.tech/demo/connect/userinfo")!
+        let userinfoEndpoint = URL(string: "\(urlIdp)/userinfo")!
         appDelegate.getAuthState()!.performAction() { (accessToken, idToken, error) in
             
             if error != nil  {
@@ -248,12 +253,12 @@ struct Dashboard: View {
                     .padding()
             }
             
-            
+            Spacer()
             
             Button {
                 
-//                appDelegate.deleteAuthStateFromKeychain()
                 changeAuthenticationState(false)
+                appDelegate.deleteAuthStateFromKeychain()
                 
             } label: {
                 Text("Logout")
@@ -267,7 +272,7 @@ struct Dashboard: View {
         } // VStack
         .onAppear {
 //            fetchUserInfo()
-            
+            self.codeNumber = "No seed"
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 if appDelegate.authfySdk.hasSeed() {
                     do {

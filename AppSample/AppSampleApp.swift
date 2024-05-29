@@ -12,7 +12,6 @@ import AppAuthCore
 struct AppSampleApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-//    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     private var authState: OIDAuthState?
     

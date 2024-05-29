@@ -9,10 +9,19 @@ import SwiftUI
 
 struct SeedsDetailView: View {
     
+    // AppStorage
+    @AppStorage("url_idp") private var urlIdp: String = ""
+    @AppStorage("client_secret") private var clientSecret: String = ""
+
+    
     func doEnrollment() {
         errorMessage = ""
         
-        let enrollmentEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/enrollment")!
+//        let edeleteEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/enrollment")!
+        
+        let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
+        let enrollmentEndpoint = URL(string: "\(fixedUrl)/mfa/totp/enrollment")!
+        
         appDelegate.getAuthState()!.performAction() { (accessToken, idToken, error) in
             
             if error != nil  {
@@ -109,7 +118,11 @@ struct SeedsDetailView: View {
     func doDeleteEnrollment() {
         errorMessage = ""
         
-        let edeleteEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/delete")!
+//        let edeleteEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/delete")!
+        
+        let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
+        let deleteEndpoint = URL(string: "\(fixedUrl)/mfa/totp/delete")!
+        
         appDelegate.getAuthState()!.performAction() { (accessToken, idToken, error) in
             
             if error != nil  {
@@ -131,7 +144,7 @@ struct SeedsDetailView: View {
             }
             
             // Add Bearer token to request
-            var urlRequest = URLRequest(url: edeleteEndpoint)
+            var urlRequest = URLRequest(url: deleteEndpoint)
             urlRequest.httpMethod = "POST"
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.allHTTPHeaderFields = ["Authorization": "Bearer \(accessToken)"]

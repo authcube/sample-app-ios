@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            print("*** AppDelegate INIT: Date now is: \(Date())")
 //            
 //            self.authState?.setNeedsTokenRefresh()
-            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: authState?.lastTokenResponse?.accessToken))")
+            print("*** AppDelegate INIT: isAuthorized -> \(String(describing: isAuthorized()))")
             
             if let accessTokenExpirationDate = authState?.lastTokenResponse?.accessTokenExpirationDate,
                accessTokenExpirationDate > Date() {
@@ -63,7 +63,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func isAuthorized() -> Bool {
         let _authState = self.getAuthState()
-        return _authState != nil && _authState!.isAuthorized && _authState!.refreshToken != nil
+        
+        if _authState == nil {
+            return false
+        }
+        
+        guard let accessTokenExpirationDate = _authState!.lastTokenResponse!.accessTokenExpirationDate else {
+            return false
+        }
+        let expired: Bool = accessTokenExpirationDate < Date()
+        return !expired && _authState!.isAuthorized && _authState!.refreshToken != nil
     }
     
     func getUsername() -> String {

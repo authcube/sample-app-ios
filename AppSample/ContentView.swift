@@ -15,6 +15,9 @@ struct ContentView: View {
     
     @State private var isAuthorized: Bool = false
     
+    @State private var showingSettings = false
+
+    
     // callback
     func changeAuthenticationState(_ authorized: Bool) {
         self.isAuthorized = authorized
@@ -22,24 +25,41 @@ struct ContentView: View {
     
     var body: some View {
         
-        // --
-        VStack {
-            
-//            Text("authorized: \(isAuthorized ? "true" : "false")")
-            
-            Group {
-                if isAuthorized {
-                    Dashboard(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState)
-                } else {
-                    OAuthView(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState)
-                }
-            }
+        NavigationView {
+            // --
+            VStack {
+                
+                Group {
+                    if isAuthorized {
+                        Dashboard(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState)
+                    } else {
                         
-        }.onAppear{
-            changeAuthenticationState(appDelegate.isAuthorized())
-        }
-        
-        // --
+                        VStack {
+                            OAuthView(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState)
+
+                            NavigationLink(destination: SettingsView()) {
+                                Text("Settings")
+                                    .frame(width: 200, height: 50)
+                                    .foregroundColor(.white)
+                                    .background(Color.indigo)
+                                    .cornerRadius(8)
+                            }.padding(.vertical)
+                            
+                        } // -- VStack
+                        .navigationBarTitle("Back", displayMode: .inline)
+                        .padding(.vertical)
+                        
+                    } // -- else
+                }
+                
+            }.navigationBarTitle("Back", displayMode: .inline)
+            .navigationBarBackButtonHidden(true)
+            .onAppear{
+                changeAuthenticationState(appDelegate.isAuthorized())
+            }
+            
+            // --
+        } // -- NavigationView
     }
 }
 
@@ -78,7 +98,3 @@ func decodeJWT(_ token: String) -> [String: Any]? {
         return nil
     }
 }
-
-//func value<T>(from dictionary: [String: Any], forKey key: String) -> T? {
-//    return dictionary[key] as? T
-//}

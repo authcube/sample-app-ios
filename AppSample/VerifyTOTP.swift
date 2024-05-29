@@ -17,6 +17,10 @@ struct VerifyTOTP: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     
+    // AppStorage
+    @AppStorage("url_idp") private var urlIdp: String = ""
+    @AppStorage("client_secret") private var clientSecret: String = ""
+    
     var body: some View {
         
         HStack(alignment: .center) {
@@ -61,7 +65,10 @@ struct VerifyTOTP: View {
     
     func verifyTOTP() {
         
-        let enrollmentEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/verify")!
+//        let verifyTOTPEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/verify")!
+        let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
+        let verifyTOTPEndpoint = URL(string:"\(fixedUrl)/mfa/totp/verify")!
+        
         appDelegate.getAuthState()!.performAction() { (accessToken, idToken, error) in
             
             if error != nil  {
@@ -81,7 +88,7 @@ struct VerifyTOTP: View {
             }
             
             // Add Bearer token to request
-            var urlRequest = URLRequest(url: enrollmentEndpoint)
+            var urlRequest = URLRequest(url: verifyTOTPEndpoint)
             urlRequest.httpMethod = "POST"
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.allHTTPHeaderFields = ["Authorization": "Bearer \(accessToken)"]

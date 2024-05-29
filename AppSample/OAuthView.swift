@@ -15,17 +15,22 @@ struct OAuthView: View {
     
     // state
     
+    // AppStorage
+    @AppStorage("url_idp") private var urlIdp: String = ""
+    @AppStorage("client_secret") private var clientSecret: String = ""
+    
     var body: some View {
         
         VStack {
             
             Button {
                 
-                let issuer = URL(string: "https://newpst.authfy.tech/demo/connect")!
+//                let issuer = URL(string: "https://newpst.authfy.tech/demo/connect")!
+                let issuer = URL(string: urlIdp)!
                 
                 // discovers endpoints
                 OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
-                    guard let config = configuration else {
+                    guard let _ = configuration else {
                         print("Error retrieving discovery document: \(error?.localizedDescription ?? "Unknown error")")
                         return
                     }
@@ -33,10 +38,10 @@ struct OAuthView: View {
                     // perform the auth request...
                     
 //                clientSecret: "utxd79fCKdm0hKaQQDJzSo7nn3eYyKWpviadd6WnGv66JABY",
-                    
+//                clientId: "ObYHVcSYqPfhBIsOU6hjWOO0",
                     // builds authentication request
                     let request = OIDAuthorizationRequest(configuration: configuration! ,
-                                                          clientId: "ObYHVcSYqPfhBIsOU6hjWOO0",
+                                                          clientId: clientSecret,
                                                           clientSecret: nil,
                                                           scopes: [OIDScopeOpenID, OIDScopeProfile, "roles"],
                                                           redirectURL: NSURL(string:  "br.com.sec4you.authfy.app.AppSample:/oauth2redirect")! as URL,
