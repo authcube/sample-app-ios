@@ -13,7 +13,7 @@ struct AppSampleApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
-    private var authState: OIDAuthState?
+//    private var authState: OIDAuthState?
     
     var body: some Scene {
         WindowGroup {

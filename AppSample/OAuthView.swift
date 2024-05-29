@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import AppAuthCore
+import AppAuth
 
 struct OAuthView: View {
     // parameters
@@ -53,6 +53,7 @@ struct OAuthView: View {
                                        
                     appDelegate.currentAuthorizationFlow =
                     OIDAuthState.authState(byPresenting: request, presenting: UIApplication.shared.windows.first!.rootViewController!, prefersEphemeralSession: true) { authState, error in
+                        
                         if let authState = authState {
                             self.appDelegate.setAuthState(authState)
                             
