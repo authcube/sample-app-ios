@@ -13,12 +13,20 @@ struct AppSampleApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
-//    private var authState: OIDAuthState?
-    
     var body: some Scene {
         WindowGroup {
-            ContentView(appDelegate: appDelegate)
+//            ContentView(appDelegate: appDelegate)
+            let viewModel = AppSampleViewModel(appDelegate: appDelegate)
+            ContentView(viewModel: viewModel)
         }
     }
     
+}
+
+class AppSampleViewModel: ObservableObject {
+    @Published var appDelegate: AppDelegate
+    
+    init(appDelegate: AppDelegate) {
+        self.appDelegate = appDelegate
+    }
 }

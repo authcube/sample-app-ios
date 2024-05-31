@@ -9,7 +9,8 @@ import SwiftUI
 
 struct Dashboard: View {
     // parameters
-    var appDelegate: AppDelegate
+    @ObservedObject var viewModel: AppSampleViewModel
+//    var appDelegate: AppDelegate
     var changeAuthenticationState: (Bool) -> Void
     
     
@@ -37,71 +38,10 @@ struct Dashboard: View {
     @AppStorage("client_secret") private var clientSecret: String = ""
 
     
-    
-    // --
-    func fetchUserInfo() {
-        let userinfoEndpoint = URL(string: "\(urlIdp)/userinfo")!
-        appDelegate.getAuthState()!.performAction() { (accessToken, idToken, error) in
-            
-            if error != nil  {
-                print("Error fetching fresh tokens: \(error?.localizedDescription ?? "Unknown error")")
-                changeAuthenticationState(false)
-                return
-            }
-            guard let accessToken = accessToken else {
-                return
-            }
-            
-            // Add Bearer token to request
-            var urlRequest = URLRequest(url: userinfoEndpoint)
-            urlRequest.httpMethod = "GET"
-            urlRequest.allHTTPHeaderFields = ["Authorization": "Bearer \(accessToken)"]
-            
-            // Perform request...
-            let session = URLSession.shared
-            let task = session.dataTask(with: urlRequest) { data, response, error in
-                // Verifique se houve algum erro
-                if let error = error {
-                    print("Erro ao fazer a solicitação: \(error)")
-                    return
-                }
-                
-                // Verificar a resposta HTTP e status code
-                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                    // Tratar a resposta com sucesso
-                    if let data = data {
-                        // Supondo que a resposta seja um JSON
-                        do {
-                            // Tentar decodificar a resposta JSON, supondo uma estrutura básica
-                            let responseObject = try JSONSerialization.jsonObject(with: data, options: [])
-                            print("Resposta JSON: \(responseObject)")
-                            self.userInfo = responseObject as! [String : Any]
-                        } catch {
-                            print("Erro ao decodificar JSON: \(error)")
-                            self.userInfo = [:]
-                        }
-                    }
-                } else {
-                    // Lidar com resposta HTTP diferente de 200 OK
-                    if let httpResponse = response as? HTTPURLResponse {
-                        print("HTTP Status Code: \(httpResponse.statusCode)")
-                        self.userInfo = [:]
-                    }
-                }
-            }
-            
-            // Iniciar a tarefa
-            task.resume()
-            
-        }
-    }
-    // --
-    
-    
     // -- getIdToken
     func getIdToken() -> String {
         
-        let idToken: String = appDelegate.getAuthState()?.lastTokenResponse?.idToken ?? ""
+        let idToken: String = viewModel.appDelegate.getAuthState()?.lastTokenResponse?.idToken ?? ""
         print("ID Token: [\(idToken)]")
         
         return idToken
@@ -111,7 +51,7 @@ struct Dashboard: View {
     // -- getAccessToken
     func getAccessToken() -> String {
         
-        let accessToken: String = appDelegate.getAuthState()?.lastTokenResponse?.accessToken ?? ""
+        let accessToken: String = viewModel.appDelegate.getAuthState()?.lastTokenResponse?.accessToken ?? ""
         print("Access Token: [\(accessToken)]")
         
         return accessToken
@@ -121,7 +61,7 @@ struct Dashboard: View {
     // -- getAccessToken
     func getRefreshToken() -> String {
         
-        let refreshToken: String = appDelegate.getAuthState()?.lastTokenResponse?.refreshToken ?? ""
+        let refreshToken: String = viewModel.appDelegate.getAuthState()?.lastTokenResponse?.refreshToken ?? ""
         print("Access Token: [\(refreshToken)]")
         
         return refreshToken
@@ -132,34 +72,10 @@ struct Dashboard: View {
         
         
         VStack {
-            
-            Button {
-                
-                print("get user info")
-                fetchUserInfo()
-                
-                
-            } label: {
-                Text("Get User Info")
-                    .padding()
-                    .frame(width: 200, height: 50)
-            }
-            .background(.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-            
+           
+            UserInfoView(viewModel: viewModel)
+                        
             VStack {
-
-                if isLoading {
-                    ProgressView("Carregando...")
-                } else {
-                    if let name = userInfo["uid"] as? String {
-                        Text("Username: \(name)")
-                    } else {
-                        Text("Click 'Get User Info', to fetch the 'username'")
-                    }
-                    // Você pode adicionar mais campos conforme necessário
-                }
                 
                 // ID Tokens
                 FeatureItem(title: "ID Tokens", action: {}, copyAction: {
@@ -198,13 +114,15 @@ struct Dashboard: View {
                 // Seed
                 FeatureItem(title: "Seeds", action:  {
                     showingDetail = true
+                    self.codeNumber = "No seed"
                 }, showCopyButton: false, copyAction: {})
                 .sheet(isPresented: $showingDetail) {
-                    SeedsDetailView(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState, isPresented: $showingDetail)
+                    SeedsDetailView(appDelegate: viewModel.appDelegate, changeAuthenticationState: changeAuthenticationState, isPresented: $showingDetail)
                 }
-            }
+                
+            } // VStack
             
-            if appDelegate.authfySdk.hasSeed() {
+            if viewModel.appDelegate.authfySdk.hasSeed() {
 
                 Text("\(countdown)")
                     .font(.largeTitle)
@@ -244,7 +162,7 @@ struct Dashboard: View {
                     .padding()
                 
                 
-                VerifyTOTP(appDelegate: appDelegate)
+                VerifyTOTP(appDelegate: viewModel.appDelegate)
                 
             } else {
             
@@ -258,7 +176,7 @@ struct Dashboard: View {
             Button {
                 
                 changeAuthenticationState(false)
-                appDelegate.deleteAuthStateFromKeychain()
+                viewModel.appDelegate.deleteAuthStateFromKeychain()
                 
             } label: {
                 Text("Logout")
@@ -274,9 +192,9 @@ struct Dashboard: View {
 //            fetchUserInfo()
             self.codeNumber = "No seed"
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                if appDelegate.authfySdk.hasSeed() {
+                if viewModel.appDelegate.authfySdk.hasSeed() {
                     do {
-                        self.codeNumber = try appDelegate.authfySdk.generateTOTP()
+                        self.codeNumber = try viewModel.appDelegate.authfySdk.generateTOTP()
                     } catch {
                         self.codeNumber = "No seed"
                         print("Error generating TOTP onAppear")
@@ -287,10 +205,14 @@ struct Dashboard: View {
         }
         .onReceive(timer) { _ in
             
-            if self.codeNumber == "No seed" && appDelegate.authfySdk.hasSeed() {
+            if self.showingDetail {
+                self.codeNumber = "No seed"
+            }
+            
+            if self.codeNumber == "No seed" && viewModel.appDelegate.authfySdk.hasSeed() {
                 do {
-                    self.codeNumber = try appDelegate.authfySdk.generateTOTP()
-                    print("code: \(self.codeNumber)")
+                    self.codeNumber = try viewModel.appDelegate.authfySdk.generateTOTP()
+                    print("*** code: \(self.codeNumber)")
                 } catch {
                     self.codeNumber = "No seed"
                     print("Error generating TOTP")
@@ -303,10 +225,9 @@ struct Dashboard: View {
             self.countdown = nextReset - seconds
             
             if countdown == 30 || countdown == 60 {
-                //                        self.codeNumber = Int.random(in: 100000...999999)
                 do {
-                    self.codeNumber = try appDelegate.authfySdk.generateTOTP()
-                    print("code: \(self.codeNumber)")
+                    self.codeNumber = try viewModel.appDelegate.authfySdk.generateTOTP()
+                    print("*** code: \(self.codeNumber)")
                 } catch {
                     self.codeNumber = "No Seed"
                     print("Error generating TOTP")
@@ -319,13 +240,10 @@ struct Dashboard: View {
     }
 }
 
-//struct Dashboard_Previews: PreviewProvider {
-//
-//    class MockAppDelegate: UIResponder, UIApplicationDelegate {
-//        // Add any necessary mock properties here
-//    }
-//
-//    static var previews: some View {
-//        Dashboard(appDelegate: UIApplication.shared.delegate as! AppDelegate, changeAuthenticationState: { _ in })
-//    }
-//}
+struct Dashboard_Previews: PreviewProvider {
+
+    static var previews: some View {
+        let _appDelegate = AppDelegate()
+        Dashboard(viewModel: AppSampleViewModel(appDelegate: _appDelegate), changeAuthenticationState: {_ in })
+    }
+}

@@ -11,9 +11,10 @@ import AppAuthCore
 
 
 struct ContentView: View {
-    var appDelegate: AppDelegate
+//    var appDelegate: AppDelegate
+    @ObservedObject var viewModel: AppSampleViewModel
     
-    @State private var isAuthorized: Bool = false
+    @State private var isAuthorized: Bool = true
     
     @State private var showingSettings = false
 
@@ -31,11 +32,11 @@ struct ContentView: View {
                 
                 Group {
                     if isAuthorized {
-                        Dashboard(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState)
+                        Dashboard(viewModel: viewModel, changeAuthenticationState: changeAuthenticationState)
                     } else {
                         
                         VStack {
-                            OAuthView(appDelegate: appDelegate, changeAuthenticationState: changeAuthenticationState)
+                            OAuthView(appDelegate: viewModel.appDelegate, changeAuthenticationState: changeAuthenticationState)
 
                             NavigationLink(destination: SettingsView()) {
                                 Text("Settings")
@@ -46,7 +47,7 @@ struct ContentView: View {
                             }.padding(.vertical)
                             
                         } // -- VStack
-                        .navigationBarTitle("Back", displayMode: .inline)
+                        .navigationBarTitle("", displayMode: .inline)
                         .padding(.vertical)
                         
                     } // -- else
@@ -55,7 +56,7 @@ struct ContentView: View {
             }.navigationBarTitle("Back", displayMode: .inline)
             .navigationBarBackButtonHidden(true)
             .onAppear{
-                changeAuthenticationState(appDelegate.isAuthorized())
+                changeAuthenticationState(viewModel.appDelegate.isAuthorized())
             }
             
             // --
@@ -64,16 +65,13 @@ struct ContentView: View {
 }
 
 
-//struct ContentView_Previews: PreviewProvider {
-//    
-//    class MockAppDelegate: UIResponder, UIApplicationDelegate {
-//        // Add any necessary mock properties here
-//    }
-//    
-//    static var previews: some View {
-//        ContentView(appDelegate: UIApplication.shared.delegate as! AppDelegate)
-//    }
-//}
+struct ContentView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        let _appDelegate = AppDelegate()
+        ContentView(viewModel: AppSampleViewModel(appDelegate: _appDelegate))
+    }
+}
 
 //
 func decodeJWT(_ token: String) -> [String: Any]? {
