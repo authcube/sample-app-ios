@@ -9,11 +9,13 @@ import SwiftUI
 
 struct FeatureItem: View {
     
+    // parameters
     var title: String
     var action: () -> Void
     var showCopyButton: Bool = true // default is showCopyButton
     var copyAction:() -> Void
     
+    // State
     @State private var showCopySuccess: Bool = false
     
     var body: some View {
@@ -22,7 +24,6 @@ struct FeatureItem: View {
             
             Button(action: action) {
                 HStack {
-                    //                Image(systemName: "plus.circle.fill")
                     Text(title)
                     
                 }
@@ -43,11 +44,11 @@ struct FeatureItem: View {
                 }) {
                     Image(systemName: "doc.on.doc") // Ícone de copiar
                         .font(.title2) // Ajuste o tamanho conforme necessário
-                        .accessibility(label: Text("Copiar para Área de Transferência"))
+                        .accessibility(label: Text("Copy to Clipboard"))
                 }
                 
                 if showCopySuccess {
-                    Text("Copiado!")
+                    Text("Copied!")
                         .foregroundColor(.green)
                 }
             }

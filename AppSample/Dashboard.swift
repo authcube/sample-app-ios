@@ -10,19 +10,15 @@ import SwiftUI
 struct Dashboard: View {
     // parameters
     @ObservedObject var viewModel: AppSampleViewModel
-//    var appDelegate: AppDelegate
     var changeAuthenticationState: (Bool) -> Void
     
     
     // state
-    @State private var userInfo: [String: Any] = [:]
-    @State private var isLoading = false
     @State private var showVerifyTOTP = false
     @State private var showingDetail = false
 
     @State private var seconds = 0
     @State private var countdown = 30
-//    @State private var codeNumber = Int.random(in: 100000...999999)
     @State private var codeNumber: String = "No seed"
     
     @State private var progressValue: Float = 1.0
@@ -37,6 +33,18 @@ struct Dashboard: View {
     @AppStorage("url_idp") private var urlIdp: String = ""
     @AppStorage("client_secret") private var clientSecret: String = ""
 
+    
+    // -- generateTOTP
+    func generateTOTP() {
+        do {
+            self.codeNumber = try viewModel.appDelegate.authfySdk.generateTOTP()
+        } catch {
+            self.codeNumber = "No Seed"
+            print("Error generating TOTP")
+        }
+    }
+    //
+    
     
     // -- getIdToken
     func getIdToken() -> String {
@@ -114,9 +122,14 @@ struct Dashboard: View {
                 // Seed
                 FeatureItem(title: "Seeds", action:  {
                     showingDetail = true
-                    self.codeNumber = "No seed"
                 }, showCopyButton: false, copyAction: {})
-                .sheet(isPresented: $showingDetail) {
+                .sheet(isPresented: $showingDetail, onDismiss: {
+                    
+                    if viewModel.appDelegate.authfySdk.hasSeed() {
+                        self.generateTOTP()
+                    }
+                    
+                }) {
                     SeedsDetailView(appDelegate: viewModel.appDelegate, changeAuthenticationState: changeAuthenticationState, isPresented: $showingDetail)
                 }
                 
@@ -148,11 +161,11 @@ struct Dashboard: View {
                     }) {
                         Image(systemName: "doc.on.doc") // Ícone de copiar
                             .font(.title2) // Ajuste o tamanho conforme necessário
-                            .accessibility(label: Text("Copiar para Área de Transferência"))
+                            .accessibility(label: Text("Copy to Clipboard"))
                     }
                     
                     if showCopySuccess {
-                        Text("Copiado!")
+                        Text("Copied!")
                             .foregroundColor(.green)
                     }
                 }.padding(.horizontal)
@@ -189,16 +202,10 @@ struct Dashboard: View {
             
         } // VStack
         .onAppear {
-//            fetchUserInfo()
             self.codeNumber = "No seed"
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 if viewModel.appDelegate.authfySdk.hasSeed() {
-                    do {
-                        self.codeNumber = try viewModel.appDelegate.authfySdk.generateTOTP()
-                    } catch {
-                        self.codeNumber = "No seed"
-                        print("Error generating TOTP onAppear")
-                    }
+                    generateTOTP()
                 }
             }
             
@@ -210,13 +217,7 @@ struct Dashboard: View {
             }
             
             if self.codeNumber == "No seed" && viewModel.appDelegate.authfySdk.hasSeed() {
-                do {
-                    self.codeNumber = try viewModel.appDelegate.authfySdk.generateTOTP()
-                    print("*** code: \(self.codeNumber)")
-                } catch {
-                    self.codeNumber = "No seed"
-                    print("Error generating TOTP")
-                }
+                generateTOTP()
             }
             
             // let seconds = Calendar.current.component(.second, from: Date())
@@ -225,13 +226,7 @@ struct Dashboard: View {
             self.countdown = nextReset - seconds
             
             if countdown == 30 || countdown == 60 {
-                do {
-                    self.codeNumber = try viewModel.appDelegate.authfySdk.generateTOTP()
-                    print("*** code: \(self.codeNumber)")
-                } catch {
-                    self.codeNumber = "No Seed"
-                    print("Error generating TOTP")
-                }
+                generateTOTP()
             }
             self.progressValue = Float(countdown) / 30.0
             
