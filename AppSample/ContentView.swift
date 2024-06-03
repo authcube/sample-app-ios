@@ -14,7 +14,7 @@ struct ContentView: View {
 //    var appDelegate: AppDelegate
     @ObservedObject var viewModel: AppSampleViewModel
     
-    @State private var isAuthorized: Bool = true
+    @State private var isAuthorized: Bool = false
     
     @State private var showingSettings = false
 

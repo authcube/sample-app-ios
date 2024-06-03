@@ -207,6 +207,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Erro ao excluir o estado de autenticação do Keychain: \(String(describing: SecCopyErrorMessageString(status, nil)))")
             return
         }
+        
+        self.authState = nil
     }
     
     enum KeychainError: Error {

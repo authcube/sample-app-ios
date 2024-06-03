@@ -12,12 +12,12 @@ struct SeedsDetailView: View {
     // AppStorage
     @AppStorage("url_idp") private var urlIdp: String = ""
     @AppStorage("client_secret") private var clientSecret: String = ""
-
+    
     
     func doEnrollment() {
         errorMessage = ""
         
-//        let edeleteEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/enrollment")!
+        //        let edeleteEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/enrollment")!
         
         let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
         let enrollmentEndpoint = URL(string: "\(fixedUrl)/mfa/totp/enrollment")!
@@ -118,7 +118,7 @@ struct SeedsDetailView: View {
     func doDeleteEnrollment() {
         errorMessage = ""
         
-//        let edeleteEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/delete")!
+        //        let edeleteEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/delete")!
         
         let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
         let deleteEndpoint = URL(string: "\(fixedUrl)/mfa/totp/delete")!
@@ -207,6 +207,8 @@ struct SeedsDetailView: View {
     var changeAuthenticationState: (Bool) -> Void
     @Binding var isPresented: Bool
     
+    @ObservedObject var popupState: PopupState
+    
     @State private var enrollmentInfo = ""
     @State private var errorMessage: String = ""
     @State private var hasSeed = false
@@ -215,9 +217,9 @@ struct SeedsDetailView: View {
         
         VStack {
             
-            Spacer()
-            
             Text("Seeds")
+                .font(.largeTitle)
+                .padding(.vertical)
             
             Spacer()
             
@@ -260,9 +262,12 @@ struct SeedsDetailView: View {
                 .cornerRadius(10)
             }
             
+            Spacer()
+            
             Button {
                 
                 isPresented = false
+                popupState.shouldRefreshView = true
                 
             } label: {
                 Text("Close")
@@ -272,17 +277,22 @@ struct SeedsDetailView: View {
             .background(Color(#colorLiteral(red: 0.82, green: 0.18, blue: 0.18, alpha: 1)))
             .foregroundColor(.white)
             .cornerRadius(10)
+            .padding(.vertical)
             
-            Spacer()
         }
         .onAppear{
             hasSeed = appDelegate.authfySdk.hasSeed()
         }
-    }
+    } // VStack
 }
 
-//struct SeedsDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SeedsDetailView()
-//    }
-//}
+struct SeedsDetailView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        let _appDelegate = AppDelegate()
+        @StateObject var popupState = PopupState()
+        
+        SeedsDetailView(appDelegate: _appDelegate, changeAuthenticationState: {_ in }, isPresented: .constant(true), popupState: popupState)
+    }
+}
