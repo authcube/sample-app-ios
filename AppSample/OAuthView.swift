@@ -44,7 +44,8 @@ struct OAuthView: View {
                                                           clientId: clientSecret,
                                                           clientSecret: nil,
                                                           scopes: [OIDScopeOpenID, OIDScopeProfile, "roles"],
-                                                          redirectURL: NSURL(string:  "br.com.sec4you.authfy.app.AppSample:/oauth2redirect")! as URL,
+//                                                          redirectURL: NSURL(string:  "br.com.sec4you.authfy.app.AppSample:/oauth2redirect")! as URL,
+                                                          redirectURL: NSURL(string:"br.com.sec4you.authfy.app.appsample:/oauth2redirect")! as URL,
                                                           responseType: OIDResponseTypeCode,
                                                           additionalParameters: nil)
                     

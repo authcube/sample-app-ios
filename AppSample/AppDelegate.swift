@@ -72,7 +72,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return false
         }
         let expired: Bool = accessTokenExpirationDate < Date()
-        return !expired && _authState!.isAuthorized && _authState!.refreshToken != nil
+        //return !expired && _authState!.isAuthorized && _authState!.refreshToken != nil
+        print("Refresh Token: [\(_authState?.refreshToken ?? "empty")]")
+        return !expired && _authState!.isAuthorized
     }
     
     func getUsername() -> String {

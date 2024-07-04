@@ -76,10 +76,11 @@ struct SeedsDetailView: View {
                                     if let rel = content["rel"] as? [String],
                                        rel.contains("urn:mfao:totp:enrollment:data"),
                                        let values = content["values"] as? [String],
-                                       let totpURL = values.first {
+                                       var totpURL = values.first {
                                         // Agora 'totpURL' contém o valor desejado
                                         enrollmentInfo = totpURL
                                         print("TOTP URL: \(totpURL)")
+                                        totpURL = totpURL.replacingOccurrences(of: "-", with: "")
                                         try appDelegate.authfySdk.setSeed(data: totpURL)
                                         hasSeed = appDelegate.authfySdk.hasSeed()
                                     }
