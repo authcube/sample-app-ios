@@ -37,6 +37,7 @@ struct OAuthView: View {
                     
                     // perform the auth request...
                     
+//                https://demo.authfy.tech/authenticator/connect/.well-known/openid-configuration
 //                clientSecret: "utxd79fCKdm0hKaQQDJzSo7nn3eYyKWpviadd6WnGv66JABY",
 //                clientId: "ObYHVcSYqPfhBIsOU6hjWOO0",
                     // builds authentication request

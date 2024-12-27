@@ -12,7 +12,7 @@ class PopupState: ObservableObject {
 }
 
 
-struct Dashboard: View {
+struct OldDashboard: View {
     // parameters
     @ObservedObject var viewModel: AppSampleViewModel
     var changeAuthenticationState: (Bool) -> Void
@@ -248,10 +248,10 @@ struct Dashboard: View {
     }
 }
 
-struct Dashboard_Previews: PreviewProvider {
+struct OldDashboard_Previews: PreviewProvider {
 
     static var previews: some View {
         let _appDelegate = AppDelegate()
-        Dashboard(viewModel: AppSampleViewModel(appDelegate: _appDelegate), changeAuthenticationState: {_ in })
+        OldDashboard(viewModel: AppSampleViewModel(appDelegate: _appDelegate), changeAuthenticationState: {_ in })
     }
 }

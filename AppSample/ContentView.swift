@@ -61,7 +61,7 @@ struct ContentView: View {
                                 .font(.headline)
                                 .padding(.horizontal)
                             
-                            NavigationLink(destination: Dashboard(viewModel: viewModel, changeAuthenticationState: changeAuthenticationState)) {
+                            NavigationLink(destination: DashboardView(viewModel: viewModel, changeAuthenticationState: changeAuthenticationState)) {
                                 
                                 Text("Enter")
                                     .frame(width: 200, height: 50)
@@ -71,9 +71,7 @@ struct ContentView: View {
                                 
                             }
                         }
-                        
-                        //                        Dashboard(viewModel: viewModel, changeAuthenticationState: changeAuthenticationState)
-                        
+                       
                         
                     } else {
                         
