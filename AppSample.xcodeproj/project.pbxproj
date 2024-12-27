@@ -12,6 +12,10 @@
 		FA287A7A2BE912D7004A2B74 /* OAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA287A792BE912D7004A2B74 /* OAuthView.swift */; };
 		FA287A7C2BE922B9004A2B74 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA287A7B2BE922B9004A2B74 /* Dashboard.swift */; };
 		FA3803EC2C0A2B24000F0169 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3803EB2C0A2B24000F0169 /* UserInfoView.swift */; };
+		FA3835062D1EE6D300CFD4AF /* BackendTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3835052D1EE6C200CFD4AF /* BackendTools.swift */; };
+		FA3835092D1EEAB200CFD4AF /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3835082D1EEAAA00CFD4AF /* Color.swift */; };
+		FA38350B2D1EF13C00CFD4AF /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA38350A2D1EF13900CFD4AF /* FooterView.swift */; };
+		FA38350D2D1EF1EA00CFD4AF /* LoginScreenHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA38350C2D1EF1E600CFD4AF /* LoginScreenHeaderView.swift */; };
 		FA67C1942BD000F00083FA5B /* AppSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA67C1932BD000F00083FA5B /* AppSampleApp.swift */; };
 		FA67C1962BD000F00083FA5B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA67C1952BD000F00083FA5B /* ContentView.swift */; };
 		FA67C1982BD000F20083FA5B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA67C1972BD000F20083FA5B /* Assets.xcassets */; };
@@ -45,6 +49,10 @@
 		FA287A792BE912D7004A2B74 /* OAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthView.swift; sourceTree = "<group>"; };
 		FA287A7B2BE922B9004A2B74 /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
 		FA3803EB2C0A2B24000F0169 /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
+		FA3835052D1EE6C200CFD4AF /* BackendTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendTools.swift; sourceTree = "<group>"; };
+		FA3835082D1EEAAA00CFD4AF /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		FA38350A2D1EF13900CFD4AF /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
+		FA38350C2D1EF1E600CFD4AF /* LoginScreenHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenHeaderView.swift; sourceTree = "<group>"; };
 		FA67C1902BD000F00083FA5B /* AppSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA67C1932BD000F00083FA5B /* AppSampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSampleApp.swift; sourceTree = "<group>"; };
 		FA67C1952BD000F00083FA5B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -73,6 +81,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FA3835072D1EEAA200CFD4AF /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FA3835082D1EEAAA00CFD4AF /* Color.swift */,
+			);
+			path = extensions;
+			sourceTree = "<group>";
+		};
 		FA67C1872BD000F00083FA5B = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +108,9 @@
 		FA67C1922BD000F00083FA5B /* AppSample */ = {
 			isa = PBXGroup;
 			children = (
+				FA38350C2D1EF1E600CFD4AF /* LoginScreenHeaderView.swift */,
+				FA38350A2D1EF13900CFD4AF /* FooterView.swift */,
+				FA3835052D1EE6C200CFD4AF /* BackendTools.swift */,
 				FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */,
 				FA0257172BE183C80086D77C /* Info.plist */,
 				FA67C1932BD000F00083FA5B /* AppSampleApp.swift */,
@@ -107,6 +126,7 @@
 				FA9157FE2BEF847900AC6DEA /* VerifyTOTP.swift */,
 				FAB7C31A2C07491F006DA59F /* SettingsView.swift */,
 				FA3803EB2C0A2B24000F0169 /* UserInfoView.swift */,
+				FA3835072D1EEAA200CFD4AF /* extensions */,
 			);
 			path = AppSample;
 			sourceTree = "<group>";
@@ -199,11 +219,15 @@
 			files = (
 				FA67C1962BD000F00083FA5B /* ContentView.swift in Sources */,
 				FA67C1A42BD016430083FA5B /* ProgressBarView.swift in Sources */,
+				FA3835062D1EE6D300CFD4AF /* BackendTools.swift in Sources */,
 				FA287A7C2BE922B9004A2B74 /* Dashboard.swift in Sources */,
+				FA38350B2D1EF13C00CFD4AF /* FooterView.swift in Sources */,
+				FA3835092D1EEAB200CFD4AF /* Color.swift in Sources */,
 				FA9157FF2BEF847900AC6DEA /* VerifyTOTP.swift in Sources */,
 				FA67C1942BD000F00083FA5B /* AppSampleApp.swift in Sources */,
 				FA87894E2BE51EC80059DF4F /* AppDelegate.swift in Sources */,
 				FAD9F7592BEEA72F00CE85D5 /* SeedsDetailView.swift in Sources */,
+				FA38350D2D1EF1EA00CFD4AF /* LoginScreenHeaderView.swift in Sources */,
 				FA287A7A2BE912D7004A2B74 /* OAuthView.swift in Sources */,
 				FA67C1A22BD0131C0083FA5B /* FeatureItem.swift in Sources */,
 				FA3803EC2C0A2B24000F0169 /* UserInfoView.swift in Sources */,

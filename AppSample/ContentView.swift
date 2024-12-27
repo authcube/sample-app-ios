@@ -11,17 +11,37 @@ import AppAuthCore
 
 
 struct ContentView: View {
-//    var appDelegate: AppDelegate
+    //    var appDelegate: AppDelegate
     @ObservedObject var viewModel: AppSampleViewModel
     
     @State private var isAuthorized: Bool = false
     
     @State private var showingSettings = false
-
+    
+    @State private var username = ""
+    
     
     // callback
     func changeAuthenticationState(_ authorized: Bool) {
         self.isAuthorized = authorized
+        
+        if !authorized {
+            return
+        }
+        
+        self.username = viewModel.appDelegate.getUsername()
+        
+//        let backendTools = BackendTools()
+//        backendTools.fetchUserInfo(viewModel.appDelegate) { username in
+//            // Use the username here
+//            print("Username: \(username)")
+//            
+//            // If you need to update UI, make sure to dispatch to main thread
+//            DispatchQueue.main.async {
+//                // Update UI here
+//                self.username = username
+//            }
+//        }
     }
     
     var body: some View {
@@ -29,37 +49,73 @@ struct ContentView: View {
         NavigationView {
             // --
             VStack {
-                
+
                 Group {
+
                     if isAuthorized {
-                        Dashboard(viewModel: viewModel, changeAuthenticationState: changeAuthenticationState)
-                    } else {
                         
                         VStack {
-                            OAuthView(appDelegate: viewModel.appDelegate, changeAuthenticationState: changeAuthenticationState)
-
-                            NavigationLink(destination: SettingsView()) {
-                                Text("Settings")
-                                    .frame(width: 200, height: 50)
-                                    .foregroundColor(.white)
-                                    .background(Color.indigo)
-                                    .cornerRadius(8)
-                            }.padding(.vertical)
+                            Spacer()
                             
+                            Text("Welcome back, \(username)")
+                                .font(.headline)
+                                .padding(.horizontal)
+                            
+                            NavigationLink(destination: Dashboard(viewModel: viewModel, changeAuthenticationState: changeAuthenticationState)) {
+                                
+                                Text("Enter")
+                                    .frame(width: 200, height: 50)
+                                    .foregroundColor(Color(hex: "#F4F6F8"))
+                                    .background(Color(hex: "#333333"))
+                                    .cornerRadius(8)
+                                
+                            }
+                        }
+                        
+                        //                        Dashboard(viewModel: viewModel, changeAuthenticationState: changeAuthenticationState)
+                        
+                        
+                    } else {
+                        
+                        HStack() {
+                            Spacer()
+                            
+                            NavigationLink(destination: SettingsView()) {
+                                Image(systemName: "gearshape")
+                                    .resizable()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundColor(Color(hex: "#333333"))
+
+                                    .padding()
+                            }
+                        } // -- HStack
+                        
+                        
+                        VStack {
+                            LoginScreenHeaderView()
+                            
+                            Spacer()
+                            
+                            OAuthView(appDelegate: viewModel.appDelegate, changeAuthenticationState: changeAuthenticationState)
+                                                        
                         } // -- VStack
                         .navigationBarTitle("", displayMode: .inline)
                         .padding(.vertical)
                         
                     } // -- else
-                }
+                    
+                } // -- Group
                 
-            }.navigationBarTitle("Back", displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
-            .onAppear{
-                changeAuthenticationState(viewModel.appDelegate.isAuthorized())
-            }
+                FooterView()
+
+                
+            }.navigationBarTitle("", displayMode: .inline)
+                .navigationBarBackButtonHidden(true)
+                .onAppear{
+                    changeAuthenticationState(viewModel.appDelegate.isAuthorized())
+                }
             
-            // --
+            // -- VStack
         } // -- NavigationView
     }
 }

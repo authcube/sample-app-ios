@@ -70,6 +70,7 @@ struct OAuthView: View {
                             
                             // chamar userinfo
                             
+                            
                         } else {
                             print("Authorization error: \(error?.localizedDescription ?? "Unknown error")")
                             
@@ -87,12 +88,12 @@ struct OAuthView: View {
                     
                 }
             } label: {
-                Text("Auth")
+                Text("Login")
                     .padding()
                     .frame(width: 200, height: 50)
             }
-            .background(.blue)
-            .foregroundColor(.white)
+            .foregroundColor(Color(hex: "#F4F6F8"))
+            .background(Color(hex: "#333333"))
             .cornerRadius(10)
             
         } // VStack
