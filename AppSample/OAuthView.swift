@@ -14,6 +14,8 @@ struct OAuthView: View {
     var changeAuthenticationState: (Bool) -> Void
     
     // state
+    @State private var showAlert: Bool = false
+    @State private var alertMessage: String = ""
     
     // AppStorage
     @AppStorage("url_idp") private var urlIdp: String = ""
@@ -24,9 +26,17 @@ struct OAuthView: View {
         VStack {
             
             Button {
+
+                guard !urlIdp.isEmpty, let _ = URL(string: urlIdp) else {
+                    
+                    alertMessage = "You must provide an URL for the IDP"
+                    showAlert = true
+                    return
+                    
+                }
                 
-//                let issuer = URL(string: "https://newpst.authfy.tech/demo/connect")!
-                let issuer = URL(string: urlIdp)!
+//                let issuer = URL(string: "https://demo.authfy.tech/sample-app/connect")!
+                var issuer = URL(string: urlIdp)!
                 
                 // discovers endpoints
                 OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in
@@ -98,6 +108,11 @@ struct OAuthView: View {
             .cornerRadius(10)
             
         } // VStack
+        .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Error"),
+                          message: Text(alertMessage),
+                          dismissButton: .default(Text("OK")))
+                }
         
     }
 }

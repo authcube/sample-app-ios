@@ -28,7 +28,7 @@ struct DashboardView: View {
                     Label("Risk", systemImage: "exclamationmark.triangle.fill")
                 }.tag(1)
             
-            Text("Home")
+            StrongTabView(viewModel: viewModel, changeAuthenticationState: changeAuthenticationState)
                 .tabItem{
                     Label("Strong", systemImage: "key.fill")
                 }.tag(2)
@@ -40,9 +40,9 @@ struct DashboardView: View {
             
         } // -- tab
         .accentColor(Color(hex: "#333333")) // Set the tab bar's accent color
-        .overlay(alignment: .top) {
-            HeaderView()
-        }
+//        .overlay(alignment: .top) {
+//            HeaderView()
+//        }
         .navigationBarBackButtonHidden(true)
         
     } // -- body

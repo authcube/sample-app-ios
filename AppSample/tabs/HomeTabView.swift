@@ -13,6 +13,9 @@ struct HomeTabView: View {
     
     var body: some View {
         VStack {
+            
+            HeaderView()
+            
             Spacer()
             
             Button {

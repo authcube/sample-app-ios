@@ -3,12 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		FA02571A2BE184500086D77C /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FA0257192BE184500086D77C /* AppAuth */; };
 		FA02571C2BE184500086D77C /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = FA02571B2BE184500086D77C /* AppAuthCore */; };
+		FA1B6DC72D272057007C4DCD /* StrongTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1B6DC62D272057007C4DCD /* StrongTabView.swift */; };
 		FA287A7A2BE912D7004A2B74 /* OAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA287A792BE912D7004A2B74 /* OAuthView.swift */; };
 		FA287A7C2BE922B9004A2B74 /* OldDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA287A7B2BE922B9004A2B74 /* OldDashboard.swift */; };
 		FA3803EC2C0A2B24000F0169 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3803EB2C0A2B24000F0169 /* UserInfoView.swift */; };
@@ -49,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		FA0257172BE183C80086D77C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA1B6DC62D272057007C4DCD /* StrongTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrongTabView.swift; sourceTree = "<group>"; };
 		FA287A792BE912D7004A2B74 /* OAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthView.swift; sourceTree = "<group>"; };
 		FA287A7B2BE922B9004A2B74 /* OldDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldDashboard.swift; sourceTree = "<group>"; };
 		FA3803EB2C0A2B24000F0169 /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
@@ -72,6 +74,10 @@
 		FAD9F7582BEEA72F00CE85D5 /* SeedsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedsDetailView.swift; sourceTree = "<group>"; };
 		FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = "authfy-sdk-2.4.0.xcframework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		FA493B482D2D778E00CF88E3 /* strong */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = strong; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		FA67C18D2BD000F00083FA5B /* Frameworks */ = {
@@ -99,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				FA3835152D1F181000CFD4AF /* HomeTabView.swift */,
+				FA1B6DC62D272057007C4DCD /* StrongTabView.swift */,
 			);
 			path = tabs;
 			sourceTree = "<group>";
@@ -122,6 +129,7 @@
 		FA67C1922BD000F00083FA5B /* AppSample */ = {
 			isa = PBXGroup;
 			children = (
+				FA493B482D2D778E00CF88E3 /* strong */,
 				FA3835122D1F17D500CFD4AF /* tabs */,
 				FA3835102D1F163500CFD4AF /* HeaderView.swift */,
 				FA38350E2D1F12FA00CFD4AF /* DashboardView.swift */,
@@ -172,6 +180,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				FA493B482D2D778E00CF88E3 /* strong */,
+			);
 			name = AppSample;
 			packageProductDependencies = (
 				FA0257192BE184500086D77C /* AppAuth */,
@@ -189,7 +200,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					FA67C18F2BD000F00083FA5B = {
 						CreatedOnToolsVersion = 14.3.1;
@@ -245,6 +256,7 @@
 				FA3835092D1EEAB200CFD4AF /* Color.swift in Sources */,
 				FA9157FF2BEF847900AC6DEA /* VerifyTOTP.swift in Sources */,
 				FA67C1942BD000F00083FA5B /* AppSampleApp.swift in Sources */,
+				FA1B6DC72D272057007C4DCD /* StrongTabView.swift in Sources */,
 				FA87894E2BE51EC80059DF4F /* AppDelegate.swift in Sources */,
 				FAD9F7592BEEA72F00CE85D5 /* SeedsDetailView.swift in Sources */,
 				FA38350D2D1EF1EA00CFD4AF /* LoginScreenHeaderView.swift in Sources */,
@@ -294,6 +306,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -354,6 +367,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
