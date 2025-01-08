@@ -17,8 +17,6 @@ struct SeedsDetailView: View {
     func doEnrollment() {
         errorMessage = ""
         
-        //        let edeleteEndpoint = URL(string:"https://newpst.authfy.tech/demo/mfa/totp/enrollment")!
-        
         let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
         let enrollmentEndpoint = URL(string: "\(fixedUrl)/mfa/totp/enrollment")!
         

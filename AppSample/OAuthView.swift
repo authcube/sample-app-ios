@@ -36,7 +36,7 @@ struct OAuthView: View {
                 }
                 
 //                let issuer = URL(string: "https://demo.authfy.tech/sample-app/connect")!
-                var issuer = URL(string: urlIdp)!
+                let issuer = URL(string: urlIdp)!
                 
                 // discovers endpoints
                 OIDAuthorizationService.discoverConfiguration(forIssuer: issuer) { configuration, error in

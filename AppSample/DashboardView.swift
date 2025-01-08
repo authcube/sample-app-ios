@@ -28,7 +28,7 @@ struct DashboardView: View {
                     Label("Risk", systemImage: "exclamationmark.triangle.fill")
                 }.tag(1)
             
-            StrongTabView(viewModel: viewModel, changeAuthenticationState: changeAuthenticationState)
+            StrongTabView(viewModel: viewModel)
                 .tabItem{
                     Label("Strong", systemImage: "key.fill")
                 }.tag(2)

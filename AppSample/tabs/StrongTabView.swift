@@ -10,7 +10,6 @@ import SwiftUI
 struct StrongTabView: View {
     
     @ObservedObject var viewModel: AppSampleViewModel
-    var changeAuthenticationState: (Bool) -> Void
     
     @State private var countdown: Int = 10
     @State private var progressValue: Float = 1.0
@@ -33,13 +32,21 @@ struct StrongTabView: View {
 
             VStack {
 
+                // -- begin NavigationLink
                 NavigationLink(
-                    destination: TotpView(viewModel: viewModel, otpType: otpType, isActive: showTotpView),
+                    destination: TotpView(viewModel: viewModel, otpType: $otpType),
                     isActive: $showTotpView)
                 {
                         EmptyView()
                 }
 
+                NavigationLink(
+                    destination: HotpView(viewModel: viewModel, otpType: $otpType),
+                    isActive: $showHotpView)
+                {
+                        EmptyView()
+                }
+                // -- end NavigationLink
                 
                 HeaderView()
                 
@@ -54,6 +61,7 @@ struct StrongTabView: View {
                         Button(action: {
                             // Handle TOTP button tap
                             showTotpView = true
+                            showHotpView = false
                             
                         }) {
                             RoundedRectangle(cornerRadius: 10)
@@ -87,7 +95,8 @@ struct StrongTabView: View {
                         // HOTP View
                         Button(action: {
                             // Handle HOTP button tap
-                            print("HOTP Button Tapped")
+                            showTotpView = false
+                            showHotpView = true
                         }) {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color(hex: "#333333")!)
@@ -193,10 +202,11 @@ struct StrongTabView: View {
             
         } // -- NavigationView
         
+        
     } // -- body
 }
 
 #Preview {
     let _appDelegate = AppDelegate()
-    StrongTabView(viewModel: AppSampleViewModel(appDelegate: _appDelegate), changeAuthenticationState: {_ in })
+    StrongTabView(viewModel: AppSampleViewModel(appDelegate: _appDelegate))
 }

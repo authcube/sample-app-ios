@@ -1,13 +1,13 @@
 //
-//  TotpView.swift
+//  HotpView.swift
 //  AppSample
 //
-//  Created by Alex Eduardo Chiaranda on 07/01/25.
+//  Created by Alex Eduardo Chiaranda on 08/01/25.
 //
 
 import SwiftUI
 
-struct TotpView: View {
+struct HotpView: View {
     
     @ObservedObject var viewModel: AppSampleViewModel
     @Binding var otpType: String
@@ -77,7 +77,7 @@ struct TotpView: View {
                     .padding(.vertical)
                 // -- HStack
                 
-                // VerifyTOTP
+                // VerifyHOTP
                 Button(action: {
                     
                 }) {
@@ -86,7 +86,7 @@ struct TotpView: View {
                         .frame(height: 80)
                         .overlay(
                                 VStack(alignment: .leading) {
-                                    Text("Verify TOTP")
+                                    Text("Verify HOTP")
                                         .font(.title2)
                                         .bold()
                                 }
@@ -95,7 +95,7 @@ struct TotpView: View {
                         )// -- RoundedRectangle overlay
                         .padding(.horizontal)
 
-                } // -- Button Verify TOTP
+                } // -- Button Verify HOTP
                 
                 
                 ZStack {
@@ -103,14 +103,14 @@ struct TotpView: View {
                         // Enroll Button
                         Button(action: {
                             
-                            self.otpType = "TOTP"
+                            self.otpType = "HOTP"
                         }) {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color(hex: "#333333")!)
                                 .frame(height: 80)
                                 .overlay(
                                     VStack(alignment: .leading) {
-                                        Text("Enroll TOTP")
+                                        Text("Enroll HOTP")
                                             .font(.title2)
                                             .bold()
                                     }
@@ -120,7 +120,7 @@ struct TotpView: View {
                                 .padding(.horizontal)
                             
                         }
-                        // -- Button Verify TOTP
+                        // -- Button Verify HOTP
                         
                     } else {
                         // UnEnroll Button
@@ -132,7 +132,7 @@ struct TotpView: View {
                                 .frame(height: 80)
                                 .overlay(
                                     VStack(alignment: .leading) {
-                                        Text("Unenroll TOTP")
+                                        Text("Unenroll HOTP")
                                             .font(.title2)
                                             .bold()
                                     }
@@ -142,7 +142,7 @@ struct TotpView: View {
                                 .padding(.horizontal)
                             
                         }
-                        // -- Button Verify TOTP
+                        // -- Button Verify HOTP
 
                     }
                     
@@ -157,14 +157,13 @@ struct TotpView: View {
         .onAppear {
             self.seedAvailable = self.hasSeed()
         }
-
         
         
     } // -- body
 }
 
 #Preview {
-    @State var otpType = "TOTP"
+    @State var otpType = "HOTP"
     let _appDelegate = AppDelegate()
-    TotpView(viewModel: AppSampleViewModel(appDelegate: _appDelegate), otpType: $otpType)
+    HotpView(viewModel: AppSampleViewModel(appDelegate: _appDelegate), otpType: $otpType)
 }
