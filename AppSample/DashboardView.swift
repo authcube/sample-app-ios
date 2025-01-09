@@ -33,7 +33,7 @@ struct DashboardView: View {
                     Label("Strong", systemImage: "key.fill")
                 }.tag(2)
             
-            Text("Home")
+            ConnectTabView(viewModel: viewModel)
                 .tabItem{
                     Label("Connect", systemImage: "person.fill")
                 }.tag(3)

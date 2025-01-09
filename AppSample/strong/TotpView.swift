@@ -16,7 +16,7 @@ struct TotpView: View {
     // copy button for TOTP
     @State private var showCopySuccess = false
     
-    @State private var codeNumber: String = "123456"
+    @State private var codeNumber: String = ""
     
     @State private var seedAvailable: Bool = false
     
@@ -342,10 +342,22 @@ struct TotpView: View {
                         }
                         // -- Button Verify TOTP
 
-                    }
+                    } // -- else
                     
                 } // -- ZStack
-                
+     
+                VStack {
+                    if !errorMessage.isEmpty {
+                        Text("Error: \(errorMessage)")
+                            .foregroundColor(.red)
+                    }
+                    
+                    if !enrollmentInfo.isEmpty {
+                        Text("Seed Registered: \(enrollmentInfo)")
+                            .foregroundColor(.black)
+                    }
+                }
+                .padding(.vertical)
                 
             } // -- VStack 1
             
@@ -354,6 +366,9 @@ struct TotpView: View {
         } // -- Top VStack
         .onAppear {
             self.seedAvailable = self.hasSeed()
+            if self.seedAvailable {
+                self.codeNumber = try! viewModel.appDelegate.authfySdk.generateTOTP()
+            }
         }
 
         

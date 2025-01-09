@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		FA02571A2BE184500086D77C /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FA0257192BE184500086D77C /* AppAuth */; };
 		FA02571C2BE184500086D77C /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = FA02571B2BE184500086D77C /* AppAuthCore */; };
-		FA1B6DC72D272057007C4DCD /* StrongTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1B6DC62D272057007C4DCD /* StrongTabView.swift */; };
 		FA287A7A2BE912D7004A2B74 /* OAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA287A792BE912D7004A2B74 /* OAuthView.swift */; };
 		FA287A7C2BE922B9004A2B74 /* OldDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA287A7B2BE922B9004A2B74 /* OldDashboard.swift */; };
 		FA3803EC2C0A2B24000F0169 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3803EB2C0A2B24000F0169 /* UserInfoView.swift */; };
@@ -19,7 +18,6 @@
 		FA38350D2D1EF1EA00CFD4AF /* LoginScreenHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA38350C2D1EF1E600CFD4AF /* LoginScreenHeaderView.swift */; };
 		FA38350F2D1F12FD00CFD4AF /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA38350E2D1F12FA00CFD4AF /* DashboardView.swift */; };
 		FA3835112D1F163900CFD4AF /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3835102D1F163500CFD4AF /* HeaderView.swift */; };
-		FA3835162D1F181000CFD4AF /* HomeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3835152D1F181000CFD4AF /* HomeTabView.swift */; };
 		FA67C1942BD000F00083FA5B /* AppSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA67C1932BD000F00083FA5B /* AppSampleApp.swift */; };
 		FA67C1962BD000F00083FA5B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA67C1952BD000F00083FA5B /* ContentView.swift */; };
 		FA67C1982BD000F20083FA5B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA67C1972BD000F20083FA5B /* Assets.xcassets */; };
@@ -30,18 +28,18 @@
 		FA9157FF2BEF847900AC6DEA /* VerifyTOTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9157FE2BEF847900AC6DEA /* VerifyTOTP.swift */; };
 		FAB7C31B2C07491F006DA59F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB7C31A2C07491F006DA59F /* SettingsView.swift */; };
 		FAD9F7592BEEA72F00CE85D5 /* SeedsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD9F7582BEEA72F00CE85D5 /* SeedsDetailView.swift */; };
-		FAD9F75C2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */; };
-		FAD9F75D2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FAE8BBAA2D2FEB0B0019B579 /* authfy-sdk-2.5.3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE8BBA92D2FEAF60019B579 /* authfy-sdk-2.5.3.xcframework */; };
+		FAE8BBAB2D2FEB0B0019B579 /* authfy-sdk-2.5.3.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAE8BBA92D2FEAF60019B579 /* authfy-sdk-2.5.3.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		FAD9F75E2BEEC31800CE85D5 /* Embed Frameworks */ = {
+		FAE8BBAC2D2FEB0B0019B579 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FAD9F75D2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Embed Frameworks */,
+				FAE8BBAB2D2FEB0B0019B579 /* authfy-sdk-2.5.3.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -50,7 +48,6 @@
 
 /* Begin PBXFileReference section */
 		FA0257172BE183C80086D77C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FA1B6DC62D272057007C4DCD /* StrongTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrongTabView.swift; sourceTree = "<group>"; };
 		FA287A792BE912D7004A2B74 /* OAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthView.swift; sourceTree = "<group>"; };
 		FA287A7B2BE922B9004A2B74 /* OldDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldDashboard.swift; sourceTree = "<group>"; };
 		FA3803EB2C0A2B24000F0169 /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
@@ -60,7 +57,6 @@
 		FA38350C2D1EF1E600CFD4AF /* LoginScreenHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreenHeaderView.swift; sourceTree = "<group>"; };
 		FA38350E2D1F12FA00CFD4AF /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		FA3835102D1F163500CFD4AF /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
-		FA3835152D1F181000CFD4AF /* HomeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabView.swift; sourceTree = "<group>"; };
 		FA67C1902BD000F00083FA5B /* AppSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA67C1932BD000F00083FA5B /* AppSampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSampleApp.swift; sourceTree = "<group>"; };
 		FA67C1952BD000F00083FA5B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -73,10 +69,13 @@
 		FAB7C31A2C07491F006DA59F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		FAD9F7582BEEA72F00CE85D5 /* SeedsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedsDetailView.swift; sourceTree = "<group>"; };
 		FAD9F75A2BEEC30200CE85D5 /* authfy-sdk-2.4.0.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = "authfy-sdk-2.4.0.xcframework"; sourceTree = "<group>"; };
+		FAE8BBA92D2FEAF60019B579 /* authfy-sdk-2.5.3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = "authfy-sdk-2.5.3.xcframework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FA493B482D2D778E00CF88E3 /* strong */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = strong; sourceTree = "<group>"; };
+		FAE8BBAF2D2FEE250019B579 /* connect */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = connect; sourceTree = "<group>"; };
+		FAE8BBB02D2FEE470019B579 /* tabs */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = tabs; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD9F75C2BEEC31800CE85D5 /* authfy-sdk-2.4.0.xcframework in Frameworks */,
+				FAE8BBAA2D2FEB0B0019B579 /* authfy-sdk-2.5.3.xcframework in Frameworks */,
 				FA02571A2BE184500086D77C /* AppAuth in Frameworks */,
 				FA02571C2BE184500086D77C /* AppAuthCore in Frameworks */,
 			);
@@ -101,19 +100,12 @@
 			path = extensions;
 			sourceTree = "<group>";
 		};
-		FA3835122D1F17D500CFD4AF /* tabs */ = {
-			isa = PBXGroup;
-			children = (
-				FA3835152D1F181000CFD4AF /* HomeTabView.swift */,
-				FA1B6DC62D272057007C4DCD /* StrongTabView.swift */,
-			);
-			path = tabs;
-			sourceTree = "<group>";
-		};
 		FA67C1872BD000F00083FA5B = {
 			isa = PBXGroup;
 			children = (
+				FAE8BBA92D2FEAF60019B579 /* authfy-sdk-2.5.3.xcframework */,
 				FA67C1922BD000F00083FA5B /* AppSample */,
+				FAE8BBA12D2FE86F0019B579 /* Frameworks */,
 				FA67C1912BD000F00083FA5B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -129,8 +121,9 @@
 		FA67C1922BD000F00083FA5B /* AppSample */ = {
 			isa = PBXGroup;
 			children = (
+				FAE8BBB02D2FEE470019B579 /* tabs */,
+				FAE8BBAF2D2FEE250019B579 /* connect */,
 				FA493B482D2D778E00CF88E3 /* strong */,
-				FA3835122D1F17D500CFD4AF /* tabs */,
 				FA3835102D1F163500CFD4AF /* HeaderView.swift */,
 				FA38350E2D1F12FA00CFD4AF /* DashboardView.swift */,
 				FA38350C2D1EF1E600CFD4AF /* LoginScreenHeaderView.swift */,
@@ -164,6 +157,13 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		FAE8BBA12D2FE86F0019B579 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -174,7 +174,7 @@
 				FA67C18C2BD000F00083FA5B /* Sources */,
 				FA67C18D2BD000F00083FA5B /* Frameworks */,
 				FA67C18E2BD000F00083FA5B /* Resources */,
-				FAD9F75E2BEEC31800CE85D5 /* Embed Frameworks */,
+				FAE8BBAC2D2FEB0B0019B579 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -182,6 +182,8 @@
 			);
 			fileSystemSynchronizedGroups = (
 				FA493B482D2D778E00CF88E3 /* strong */,
+				FAE8BBAF2D2FEE250019B579 /* connect */,
+				FAE8BBB02D2FEE470019B579 /* tabs */,
 			);
 			name = AppSample;
 			packageProductDependencies = (
@@ -248,7 +250,6 @@
 				FA67C1962BD000F00083FA5B /* ContentView.swift in Sources */,
 				FA38350F2D1F12FD00CFD4AF /* DashboardView.swift in Sources */,
 				FA67C1A42BD016430083FA5B /* ProgressBarView.swift in Sources */,
-				FA3835162D1F181000CFD4AF /* HomeTabView.swift in Sources */,
 				FA3835062D1EE6D300CFD4AF /* BackendTools.swift in Sources */,
 				FA287A7C2BE922B9004A2B74 /* OldDashboard.swift in Sources */,
 				FA38350B2D1EF13C00CFD4AF /* FooterView.swift in Sources */,
@@ -256,7 +257,6 @@
 				FA3835092D1EEAB200CFD4AF /* Color.swift in Sources */,
 				FA9157FF2BEF847900AC6DEA /* VerifyTOTP.swift in Sources */,
 				FA67C1942BD000F00083FA5B /* AppSampleApp.swift in Sources */,
-				FA1B6DC72D272057007C4DCD /* StrongTabView.swift in Sources */,
 				FA87894E2BE51EC80059DF4F /* AppDelegate.swift in Sources */,
 				FAD9F7592BEEA72F00CE85D5 /* SeedsDetailView.swift in Sources */,
 				FA38350D2D1EF1EA00CFD4AF /* LoginScreenHeaderView.swift in Sources */,

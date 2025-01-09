@@ -14,7 +14,7 @@ struct StrongTabView: View {
     @State private var countdown: Int = 10
     @State private var progressValue: Float = 1.0
     
-    @State private var otpType: String = "TOTP"
+    @State private var otpType: String = ""
     
     // Naviagation
     @State private var showTotpView: Bool = false

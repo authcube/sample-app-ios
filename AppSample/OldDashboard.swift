@@ -147,7 +147,7 @@ struct OldDashboard: View {
                     
                 } // VStack
                 
-                if viewModel.appDelegate.authfySdk.hasSeed() {
+                if !viewModel.appDelegate.authfySdk.hasSeed() {
                     
                     Text("\(countdown)")
                         .font(.largeTitle)
