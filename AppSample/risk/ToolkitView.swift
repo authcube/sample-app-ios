@@ -13,10 +13,24 @@ struct KeyValuePair: Identifiable, Codable {
     var key: String
     var value: String
     
+    // Only include "key" and "value" in the JSON
+    enum CodingKeys: String, CodingKey {
+        case key
+        case value
+    }
+    
     init(id: UUID = UUID(), key: String, value: String) {
         self.id = id
         self.key = key
         self.value = value
+    }
+    
+    // Initializer for Decodable conformance
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.key = try container.decode(String.self, forKey: .key)
+        self.value = try container.decode(String.self, forKey: .value)
+        self.id = UUID() // Assign a default value or handle differently if needed
     }
 }
 
@@ -40,11 +54,18 @@ class KeyValueViewModel: ObservableObject {
     }
     
     func toJSON() -> String? {
+        // Transform the array of KeyValuePair into an array of dictionaries
+        let transformedPairs = pairs.map { pair in
+            return [pair.key: pair.value]
+        }
+        
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
+        
         do {
-            let data = try encoder.encode(pairs)
-            return String(data: data, encoding: .utf8)
+            // Encode the array of dictionaries
+            let jsonData = try encoder.encode(transformedPairs)
+            return String(data: jsonData, encoding: .utf8)
         } catch {
             print("Error encoding to JSON: \(error)")
             return nil
@@ -56,7 +77,17 @@ class KeyValueViewModel: ObservableObject {
 struct ToolkitView: View {
     @ObservedObject var viewModel: AppSampleViewModel
     
+    // AppStorage
+    @AppStorage("url_idp") private var urlIdp: String = ""
+    @AppStorage("client_secret") private var clientSecret: String = ""
+    
+    
     @StateObject private var keyViewModel = KeyValueViewModel()
+    
+    // alert
+    @State private var isLoading = false
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     // For editing an existing pair
     @State private var editPair: KeyValuePair?
@@ -76,6 +107,10 @@ struct ToolkitView: View {
         NavigationView {
             
             VStack {
+                HeaderView()
+                
+                Text("Custom Attributes")
+                
                 // List
                 List {
                     ForEach(keyViewModel.pairs) { pair in
@@ -108,7 +143,6 @@ struct ToolkitView: View {
                     }
                 }
                 .listStyle(.inset)
-                .navigationTitle("Custom Attributes")
                 // Edit Sheet
                 .sheet(isPresented: $showEditSheet) {
                     editView
@@ -132,18 +166,23 @@ struct ToolkitView: View {
                         // .toggleStyle(SwitchToggleStyle(tint: .red))
                     }
                     
-                    // -- Form
-                    
-                    Button {
-                        
-                    } label: {
-                        Text("Evaluate")
+                    if isLoading {
+                        Text("Evaluating ...")
                             .padding()
                             .frame(width: 250, height: 50)
                     }
-                    .foregroundColor(Color(hex: "#F4F6F8"))
-                    .background(Color(hex: "#333333"))
-                    .cornerRadius(10)
+                    else {
+                        Button {
+                            doEvaluate()
+                        } label: {
+                            Text("Evaluate")
+                                .padding()
+                                .frame(width: 250, height: 50)
+                        }
+                        .foregroundColor(Color(hex: "#F4F6F8"))
+                        .background(Color(hex: "#333333"))
+                        .cornerRadius(10)
+                    }
                     
                 } // -- VStack
                 .padding()
@@ -161,6 +200,11 @@ struct ToolkitView: View {
                 }
             }
         }
+        .alert("Evaluation", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { showAlert = false }
+        } message: {
+            Text("\(alertMessage)")
+        }
     } // -- body
     
     
@@ -171,7 +215,9 @@ struct ToolkitView: View {
             Form {
                 Section(header: Text("Edit Key/Value")) {
                     TextField("Key", text: $editKey)
+                        .textInputAutocapitalization(.never)
                     TextField("Value", text: $editValue)
+                        .textInputAutocapitalization(.never)
                 }
             }
             .navigationBarTitle("Edit Pair", displayMode: .inline)
@@ -199,7 +245,9 @@ struct ToolkitView: View {
             Form {
                 Section(header: Text("Add New Key/Value")) {
                     TextField("Key", text: $newKey)
+                        .textInputAutocapitalization(.never)
                     TextField("Value", text: $newValue)
+                        .textInputAutocapitalization(.never)
                 }
             }
             .navigationBarTitle("Add Pair", displayMode: .inline)
@@ -224,6 +272,113 @@ struct ToolkitView: View {
             }
         }
     }
+    
+    // do evaluate
+    func doEvaluate() {
+        
+        let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
+        let evaluateEndpoint = URL(string: "\(fixedUrl)/risk/evaluate")!
+        
+        let jsonString = #"""
+        {
+            "additional_inputs": 
+                \#(keyViewModel.toJSON() ?? "[]"),
+            "dna": "\#(viewModel.appDelegate.authfySdk.getDeviceInfo())",
+            "username": "\#(viewModel.appDelegate.getUsername())",
+            "verbose": false
+        }
+        """#
+        
+        print("data to evaluate: \(jsonString)")
+        
+        guard let jsonData = jsonString.data(using: .utf8) else {
+            print("Erro ao criar dados JSON")
+            return
+        }
+        
+        
+        viewModel.appDelegate.getAuthState()!.performAction() { (accessToken, idToken, error) in
+            
+            if error != nil  {
+                print("Error fetching fresh tokens: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            guard let accessToken = accessToken else {
+                print("VerifyTOTP - unable to get accessToken")
+                return
+            }
+            
+            // Add Bearer token to request
+            var urlRequest = URLRequest(url: evaluateEndpoint)
+            urlRequest.httpMethod = "POST"
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            urlRequest.allHTTPHeaderFields = ["Authorization": "Bearer \(accessToken)"]
+            urlRequest.httpBody = jsonData
+            
+            // Perform request...
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest) { data, response, error in
+                
+                isLoading = false
+                
+                // Verifique se houve algum erro
+                if let error = error {
+                    print("Erro ao fazer a solicitação: \(error)")
+                    return
+                }
+                
+                // Verificar a resposta HTTP e status code
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                    // Tratar a resposta com sucesso
+                    if let data = data {
+                        // Supondo que a resposta seja um JSON
+                        do {
+                            // Tentar decodificar a resposta JSON, supondo uma estrutura básica
+                            let responseObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                            print("Resposta JSON: \(responseObject!)")
+                            
+                            if let contents = responseObject!["contents"] as? [[String: Any]],
+                               let firstContent = contents.first,
+                               let values = firstContent["values"] as? [Any],
+                               let booleanValue = values[2] as? Bool { // Considerando que você queria um boolean, mas na sua descrição tem um inteiro (1).
+                                
+                                print("Boolean value: \(booleanValue)")
+                                
+                                alertMessage = "Evaluation: "
+                                showAlert = true
+                                
+                            } else {
+                                print("Error: Unable to find the expected data in the data structure.")
+                            }
+
+                            
+                        } catch {
+                            print("Erro ao decodificar JSON: \(error)")
+                        }
+                    }
+                } else {
+                    // Lidar com resposta HTTP diferente de 200 OK
+                    if let httpResponse = response as? HTTPURLResponse {
+                        print("Evaluation - HTTP Status Code: \(httpResponse.statusCode)")
+                        alertMessage = "Evaluation - HTTP Status Code: \(httpResponse.statusCode)"
+                        showAlert = true
+                        return
+                    }
+                    
+                    alertMessage = "Evaluation - HTTP Unknown error"
+                    showAlert = true
+                    
+                }
+                
+            }
+            
+            // Iniciar a tarefa
+            isLoading = true
+            task.resume()
+            
+        } // -- performAction
+    }
+    
 }
 
 

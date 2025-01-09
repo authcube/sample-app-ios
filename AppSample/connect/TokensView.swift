@@ -69,7 +69,7 @@ struct TokensView: View {
             ScrollView {
                 Text("\(tokenValue)")
                 // If you want to allow text selection (so users can copy)
-                // .textSelection(.enabled)
+                    .textSelection(.enabled)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
             }
