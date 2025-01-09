@@ -40,9 +40,6 @@ struct DashboardView: View {
             
         } // -- tab
         .accentColor(Color(hex: "#333333")) // Set the tab bar's accent color
-//        .overlay(alignment: .top) {
-//            HeaderView()
-//        }
         .navigationBarBackButtonHidden(true)
         
     } // -- body

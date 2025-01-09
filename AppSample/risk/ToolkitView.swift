@@ -13,7 +13,7 @@ struct ToolkitView: View {
     //
     @State private var deviceInfo: String = ""
     @State private var host: String = "localhost"
-    @State private var port: String = "localhost"
+    @State private var port: String = "443"
     @State private var customAttributes: String = #"{ "json_schema": "" }"#
     @State private var deviceEnrollment: Bool = false
     

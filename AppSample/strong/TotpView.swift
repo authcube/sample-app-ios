@@ -12,11 +12,15 @@ struct TotpView: View {
     @ObservedObject var viewModel: AppSampleViewModel
     @Binding var otpType: String
     
+    // timer
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
     //
     // copy button for TOTP
     @State private var showCopySuccess = false
     
     @State private var codeNumber: String = ""
+    @State private var countDown: Int = 30
     
     @State private var seedAvailable: Bool = false
     
@@ -33,6 +37,14 @@ struct TotpView: View {
     @AppStorage("url_idp") private var urlIdp: String = ""
     @AppStorage("client_secret") private var clientSecret: String = ""
     
+    
+    func generateTOTP() {
+        
+        if self.seedAvailable {
+            self.codeNumber = try! viewModel.appDelegate.authfySdk.generateTOTP()
+        }
+        
+    }
     
     func doEnrollment() {
         errorMessage = ""
@@ -98,7 +110,7 @@ struct TotpView: View {
                                         totpURL = totpURL.replacingOccurrences(of: "-", with: "")
                                         try viewModel.appDelegate.authfySdk.setSeed(data: totpURL)
                                         seedAvailable = viewModel.appDelegate.authfySdk.hasSeed()
-                                        self.codeNumber = try viewModel.appDelegate.authfySdk.generateTOTP()
+                                        generateTOTP()
                                     }
                                 }
                             }
@@ -236,7 +248,15 @@ struct TotpView: View {
             
             // VStack 1
             VStack {
-                
+
+                Text("\(countDown)")
+                    .frame(width: 50)
+                    .font(.largeTitle)
+                    .padding(.vertical)
+                    .background(self.countDown < 10 ? Color.red : Color.clear)
+                    .animation(.default, value: countDown)
+                    .clipShape(Circle())
+
                 HStack {
                     Text("Code:")
                         .font(.title2)
@@ -267,7 +287,7 @@ struct TotpView: View {
                     
                     if showCopySuccess {
                         Text("Copied!")
-                            .foregroundColor(.green)
+                            .foregroundColor(Color(hex: "#333333"))
                     }
                 }
                     .padding(.horizontal)
@@ -275,24 +295,8 @@ struct TotpView: View {
                 // -- HStack
                 
                 // VerifyTOTP
-                Button(action: {
-                    
-                }) {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color(hex: "#333333")!)
-                        .frame(height: 80)
-                        .overlay(
-                                VStack(alignment: .leading) {
-                                    Text("Verify TOTP")
-                                        .font(.title2)
-                                        .bold()
-                                }
-                                .foregroundColor(Color(hex: "#F4F6F8"))
-                            
-                        )// -- RoundedRectangle overlay
-                        .padding(.horizontal)
-
-                } // -- Button Verify TOTP
+                VerifyTOTP(appDelegate: viewModel.appDelegate)
+                    .padding(.vertical)
                 
                 
                 ZStack {
@@ -367,9 +371,29 @@ struct TotpView: View {
         .navigationTitle("TOTP")
         .onAppear {
             self.seedAvailable = self.hasSeed()
-            if self.seedAvailable {
-                self.codeNumber = try! viewModel.appDelegate.authfySdk.generateTOTP()
+            generateTOTP()
+        }
+        .onReceive(timer) { _ in
+            
+            
+//            if self.showingDetail {
+//                self.codeNumber = "No seed"
+//            }
+            
+//            if self.codeNumber == "No seed" && viewModel.appDelegate.authfySdk.hasSeed() {
+//                generateTOTP()
+//            }
+            
+            // let seconds = Calendar.current.component(.second, from: Date())
+            let seconds = Calendar.current.component(.second, from: Date())
+            let nextReset = (seconds >= 30 ? 60 : 30)
+            self.countDown = nextReset - seconds
+            
+            if countDown == 30 || countDown == 60 {
+                generateTOTP()
             }
+//            self.progressValue = Float(countDown) / 30.0
+            
         }
 
         

@@ -47,8 +47,8 @@ struct VerifyTOTP: View {
                     verifyTOTP()
                 }
                 .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
+                .foregroundColor(Color(hex: "#F4F6F8"))
+                .background(Color(hex: "#333333"))
                 .cornerRadius(8)
             }
         }
@@ -157,8 +157,9 @@ struct VerifyTOTP: View {
         
 }
 
-//struct VerifyTOTP_Previews: PreviewProvider {
-//    static var previews: some View {
-//        VerifyTOTP()
-//    }
-//}
+struct VerifyTOTP_Previews: PreviewProvider {
+    static var previews: some View {
+        let _appDelegate = AppDelegate()
+        VerifyTOTP(appDelegate: _appDelegate)
+    }
+}
