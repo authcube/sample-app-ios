@@ -23,7 +23,7 @@ struct DashboardView: View {
                     Label("Home", systemImage: "house.fill")
                 }.tag(0)
 
-            Text("Risk")
+            RiskTabView(viewModel: viewModel)
                 .tabItem{
                     Label("Risk", systemImage: "exclamationmark.triangle.fill")
                 }.tag(1)

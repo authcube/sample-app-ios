@@ -80,6 +80,7 @@ struct TokensView: View {
             .padding()
             
         } // -- VStack
+        .navigationTitle("Tokens")
         
         
     } // -- body

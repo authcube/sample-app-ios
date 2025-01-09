@@ -364,6 +364,7 @@ struct TotpView: View {
             Spacer()
             
         } // -- Top VStack
+        .navigationTitle("TOTP")
         .onAppear {
             self.seedAvailable = self.hasSeed()
             if self.seedAvailable {

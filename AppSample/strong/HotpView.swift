@@ -154,6 +154,7 @@ struct HotpView: View {
             Spacer()
             
         } // -- Top VStack
+        .navigationTitle("HOTP")
         .onAppear {
             self.seedAvailable = self.hasSeed()
         }

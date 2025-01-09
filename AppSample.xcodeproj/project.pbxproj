@@ -73,6 +73,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		FA1290DF2D2FFE9000097D5A /* risk */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = risk; sourceTree = "<group>"; };
 		FA493B482D2D778E00CF88E3 /* strong */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = strong; sourceTree = "<group>"; };
 		FAE8BBAF2D2FEE250019B579 /* connect */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = connect; sourceTree = "<group>"; };
 		FAE8BBB02D2FEE470019B579 /* tabs */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = tabs; sourceTree = "<group>"; };
@@ -121,6 +122,7 @@
 		FA67C1922BD000F00083FA5B /* AppSample */ = {
 			isa = PBXGroup;
 			children = (
+				FA1290DF2D2FFE9000097D5A /* risk */,
 				FAE8BBB02D2FEE470019B579 /* tabs */,
 				FAE8BBAF2D2FEE250019B579 /* connect */,
 				FA493B482D2D778E00CF88E3 /* strong */,
@@ -181,6 +183,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				FA1290DF2D2FFE9000097D5A /* risk */,
 				FA493B482D2D778E00CF88E3 /* strong */,
 				FAE8BBAF2D2FEE250019B579 /* connect */,
 				FAE8BBB02D2FEE470019B579 /* tabs */,
