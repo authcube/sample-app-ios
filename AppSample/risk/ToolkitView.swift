@@ -337,14 +337,11 @@ struct ToolkitView: View {
                             let responseObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                             print("Resposta JSON: \(responseObject!)")
                             
-                            if let contents = responseObject!["contents"] as? [[String: Any]],
-                               let firstContent = contents.first,
-                               let values = firstContent["values"] as? [Any],
-                               let booleanValue = values[2] as? Bool { // Considerando que você queria um boolean, mas na sua descrição tem um inteiro (1).
-                                
-                                print("Boolean value: \(booleanValue)")
-                                
-                                alertMessage = "Evaluation: "
+                            let evaluateDataString = try extractEvaluateData(from: responseObject!)
+                            
+                            if let evaluateDataString = evaluateDataString {
+                                print("Evaluate Data String: \(evaluateDataString)")
+                                alertMessage = "Evaluation: \(evaluateDataString)"
                                 showAlert = true
                                 
                             } else {
@@ -377,6 +374,44 @@ struct ToolkitView: View {
             task.resume()
             
         } // -- performAction
+    }
+    
+    func extractEvaluateData(from responseObject: [String: Any]) throws -> String? {
+        guard let links = responseObject["links"] as? [[String: Any]] else {
+            throw ExtractionError.linksNotFound
+        }
+
+        for link in links {
+            guard let parameters = link["parameters"] as? [String: Any],
+                  let evaluateData = parameters["evaluate-data"] as? [String: Any] else {
+                continue // Skip to the next link if "parameters" or "evaluate-data" are not found
+            }
+
+            // Format the output as a dictionary with "evaluate-data" as the key
+            let formattedEvaluateData = ["evaluate-data": evaluateData]
+
+            do {
+                // Convert the formatted data to a JSON string
+                let jsonData = try JSONSerialization.data(withJSONObject: formattedEvaluateData, options: [])
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    return jsonString
+                } else {
+                    throw ExtractionError.stringConversionFailed
+                }
+            } catch {
+                throw ExtractionError.jsonSerializationFailed(error)
+            }
+        }
+
+        return nil // Return nil if "evaluate-data" is not found in any link
+    }
+
+    // Define custom errors for better error handling
+    enum ExtractionError: Error {
+        case linksNotFound
+        case evaluateDataNotFound
+        case jsonSerializationFailed(Error)
+        case stringConversionFailed
     }
     
 }
