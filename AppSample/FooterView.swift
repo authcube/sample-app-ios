@@ -10,7 +10,7 @@ import SwiftUI
 struct FooterView: View {
     var body: some View {
         VStack {
-            Spacer()
+//            Spacer()
             
             Text("COPYRIGHTS © SINCE 2009.")
                 .font(.subheadline)

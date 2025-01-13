@@ -70,6 +70,8 @@ struct ContentView: View {
                                     .cornerRadius(8)
                                 
                             }
+                            
+                            Spacer()
                         }
                         
                         
@@ -95,13 +97,14 @@ struct ContentView: View {
                             Spacer()
                             
                             OAuthView(appDelegate: viewModel.appDelegate, changeAuthenticationState: changeAuthenticationState)
-                            
+                            Spacer()
+
                         } // -- VStack
                         .navigationBarTitle("", displayMode: .inline)
                         .padding(.vertical)
                         
                     } // -- else
-                    
+
                 } // -- Group
                 
                 FooterView()

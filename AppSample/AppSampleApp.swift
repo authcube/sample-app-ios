@@ -17,7 +17,8 @@ struct AppSampleApp: App {
         WindowGroup {
 //            ContentView(appDelegate: appDelegate)
             let viewModel = AppSampleViewModel(appDelegate: appDelegate)
-            ContentView(viewModel: viewModel)
+//            ContentView(viewModel: viewModel)
+            RootView(viewModel: viewModel)
         }
     }
     
@@ -30,3 +31,7 @@ class AppSampleViewModel: ObservableObject {
         self.appDelegate = appDelegate
     }
 }
+
+
+
+
