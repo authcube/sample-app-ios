@@ -1,0 +1,63 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.6.1 (swiftlang-5.6.0.323.66 clang-1316.0.20.12)
+// swift-module-flags: -target i386-apple-ios10.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name AuthfySdk
+@_exported import AuthfySdk
+import CommonCrypto
+import CoreGraphics
+import CoreLocation
+import CryptoKit
+import Foundation
+import Security
+import Swift
+import SwiftUI
+import SystemConfiguration
+import UIKit
+import _Concurrency
+import os
+public protocol FingerprintFunction {
+  func fingerprint(data: Foundation.Data) -> Swift.String
+}
+public class AuthfySdk {
+  public init()
+  public func getDeviceInfo(additionalData _data: Swift.Dictionary<Swift.String, Swift.String> = Dictionary()) -> Swift.String
+  public func getCodeVerifier(length: Swift.Int = 128) -> Swift.String
+  public func getCodeChallenge(codeVerifier: Swift.String) -> Swift.String
+  public func hasSeed() -> Swift.Bool
+  public func hasSeed(for identifier: Swift.String) throws -> Swift.Bool
+  public func setSeed(data: Swift.String) throws
+  public func deleteSeed() throws
+  public func generateTOTP(now: Swift.Int64? = nil) throws -> Swift.String
+  public func generateHOTP(counter: Swift.Int64? = nil) throws -> Swift.String
+  @available(*, deprecated, message: "use generateKeyPair() instead")
+  public func generateKeyPair(kty: Swift.String? = "RSA", alg: Swift.String? = "RS256") throws
+  public func generateKeyPair() throws
+  public func registerClient(url: Swift.String, accessToken: Swift.String? = "") throws
+  public func removeClientId()
+  public func getClientId() -> Swift.String
+  public func sign(data: Swift.String, exp: Swift.Int? = 300, iat: Swift.Int? = Int(Date().timeIntervalSince1970)) throws -> Swift.String
+  public func generateOCRA(question: Swift.String) throws -> Swift.String
+  public func clearKeys() throws
+  public func toString() -> Swift.String
+  @objc deinit
+}
+extension CoreGraphics.CGSize : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+public class VersionHarvester {
+  public init()
+  @objc deinit
+}
+extension UIKit.UIDevice {
+  @_Concurrency.MainActor(unsafe) public func getCPUName() -> Swift.String
+  @_Concurrency.MainActor(unsafe) public func getCPUSpeed() -> Swift.String
+  @_Concurrency.MainActor(unsafe) public func CPUinfo() -> Swift.Dictionary<Swift.String, Swift.String>
+}
+public class LocationHarvester {
+  public init()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class Logger {
+  @objc deinit
+}
