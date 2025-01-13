@@ -31,17 +31,17 @@ struct ContentView: View {
         
         self.username = viewModel.appDelegate.getUsername()
         
-//        let backendTools = BackendTools()
-//        backendTools.fetchUserInfo(viewModel.appDelegate) { username in
-//            // Use the username here
-//            print("Username: \(username)")
-//            
-//            // If you need to update UI, make sure to dispatch to main thread
-//            DispatchQueue.main.async {
-//                // Update UI here
-//                self.username = username
-//            }
-//        }
+        //        let backendTools = BackendTools()
+        //        backendTools.fetchUserInfo(viewModel.appDelegate) { username in
+        //            // Use the username here
+        //            print("Username: \(username)")
+        //
+        //            // If you need to update UI, make sure to dispatch to main thread
+        //            DispatchQueue.main.async {
+        //                // Update UI here
+        //                self.username = username
+        //            }
+        //        }
     }
     
     var body: some View {
@@ -49,9 +49,9 @@ struct ContentView: View {
         NavigationView {
             // --
             VStack {
-
+                
                 Group {
-
+                    
                     if isAuthorized {
                         
                         VStack {
@@ -71,7 +71,7 @@ struct ContentView: View {
                                 
                             }
                         }
-                       
+                        
                         
                     } else {
                         
@@ -83,7 +83,7 @@ struct ContentView: View {
                                     .resizable()
                                     .frame(width: 25, height: 25)
                                     .foregroundColor(Color(hex: "#333333"))
-
+                                
                                     .padding()
                             }
                         } // -- HStack
@@ -95,7 +95,7 @@ struct ContentView: View {
                             Spacer()
                             
                             OAuthView(appDelegate: viewModel.appDelegate, changeAuthenticationState: changeAuthenticationState)
-                                                        
+                            
                         } // -- VStack
                         .navigationBarTitle("", displayMode: .inline)
                         .padding(.vertical)
@@ -105,7 +105,7 @@ struct ContentView: View {
                 } // -- Group
                 
                 FooterView()
-
+                
                 
             }.navigationBarTitle("", displayMode: .inline)
                 .navigationBarBackButtonHidden(true)

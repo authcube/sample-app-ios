@@ -86,6 +86,7 @@ struct ToolkitView: View {
     
     // alert
     @State private var isLoading = false
+    @State private var loadingText: String = ""
     @State private var showAlert = false
     @State private var alertMessage = ""
     
@@ -167,13 +168,13 @@ struct ToolkitView: View {
                     }
                     
                     if isLoading {
-                        Text("Evaluating ...")
+                        Text("\(loadingText)")
                             .padding()
                             .frame(width: 250, height: 50)
                     }
                     else {
                         Button {
-                            doEvaluate()
+                            doEvaluate(withPostEvaluate: deviceEnrollment)
                         } label: {
                             Text("Evaluate")
                                 .padding()
@@ -274,7 +275,7 @@ struct ToolkitView: View {
     }
     
     // do evaluate
-    func doEvaluate() {
+    func doEvaluate(withPostEvaluate postEvaluate: Bool) {
         
         let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
         let evaluateEndpoint = URL(string: "\(fixedUrl)/risk/evaluate")!
@@ -292,7 +293,9 @@ struct ToolkitView: View {
         print("data to evaluate: \(jsonString)")
         
         guard let jsonData = jsonString.data(using: .utf8) else {
-            print("Erro ao criar dados JSON")
+            print("Error creating JSON Body")
+            alertMessage = "Error creating JSON Body"
+            showAlert = true
             return
         }
         
@@ -304,7 +307,7 @@ struct ToolkitView: View {
                 return
             }
             guard let accessToken = accessToken else {
-                print("VerifyTOTP - unable to get accessToken")
+                print("Evaluate - unable to get accessToken")
                 return
             }
             
@@ -323,7 +326,7 @@ struct ToolkitView: View {
                 
                 // Verifique se houve algum erro
                 if let error = error {
-                    print("Erro ao fazer a solicitação: \(error)")
+                    print("Error performing the request: \(error)")
                     return
                 }
                 
@@ -341,8 +344,19 @@ struct ToolkitView: View {
                             
                             if let evaluateDataString = evaluateDataString {
                                 print("Evaluate Data String: \(evaluateDataString)")
-                                alertMessage = "Evaluation: \(evaluateDataString)"
-                                showAlert = true
+                                
+                                if postEvaluate {
+                                    doPostEvaluate(withEvaluateData: evaluateDataString)
+                                } else {
+                                    
+                                    if deviceEnrollment {
+                                        alertMessage = "Evaluation and Post-Evaluation: completed"
+                                    } else {
+                                        alertMessage = "Evaluation transaction-id: \(evaluateDataString)"
+                                    }
+                                    showAlert = true
+
+                                }
                                 
                             } else {
                                 print("Error: Unable to find the expected data in the data structure.")
@@ -350,7 +364,7 @@ struct ToolkitView: View {
 
                             
                         } catch {
-                            print("Erro ao decodificar JSON: \(error)")
+                            print("Error decoding JSON: \(error)")
                         }
                     }
                 } else {
@@ -371,6 +385,101 @@ struct ToolkitView: View {
             
             // Iniciar a tarefa
             isLoading = true
+            loadingText = "Evaluating ..."
+            task.resume()
+            
+        } // -- performAction
+    }
+    
+    func doPostEvaluate(withEvaluateData evaluationData: String) {
+        
+        let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
+        let evaluateEndpoint = URL(string: "\(fixedUrl)/risk/evaluate")!
+        
+        let jsonString = #"""
+        {
+            \#(evaluationData),
+            "secondary-auth": true,
+            "username": "\#(viewModel.appDelegate.getUsername())",
+            "verbose": false
+        }
+        """#
+        
+        print("data to evaluate: \(jsonString)")
+        
+        guard let jsonData = jsonString.data(using: .utf8) else {
+            print("Error creating JSON Body")
+            alertMessage = "Error creating JSON Body"
+            showAlert = true
+            return
+        }
+        
+        
+        viewModel.appDelegate.getAuthState()!.performAction() { (accessToken, idToken, error) in
+            
+            if error != nil  {
+                print("Error fetching fresh tokens: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            guard let accessToken = accessToken else {
+                print("Post-Evaluate - unable to get accessToken")
+                return
+            }
+            
+            // Add Bearer token to request
+            var urlRequest = URLRequest(url: evaluateEndpoint)
+            urlRequest.httpMethod = "POST"
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            urlRequest.allHTTPHeaderFields = ["Authorization": "Bearer \(accessToken)"]
+            urlRequest.httpBody = jsonData
+            
+            // Perform request...
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest) { data, response, error in
+                
+                isLoading = false
+                
+                // Verifique se houve algum erro
+                if let error = error {
+                    print("Error post-evaluate: \(error)")
+                    return
+                }
+                
+                // Verificar a resposta HTTP e status code
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                    // Tratar a resposta com sucesso
+                    if let data = data {
+                        // Supondo que a resposta seja um JSON
+                        do {
+                            // Tentar decodificar a resposta JSON, supondo uma estrutura básica
+                            let responseObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                            print("Resposta JSON: \(responseObject!)")
+                                                           
+                            doEvaluate(withPostEvaluate: false)
+                            
+                        } catch {
+                            print("Error post-evaluate: \(error)")
+                        }
+                    }
+                } else {
+                    // Lidar com resposta HTTP diferente de 200 OK
+                    if let httpResponse = response as? HTTPURLResponse {
+                        print("Post-Evaluation - HTTP Status Code: \(httpResponse.statusCode)")
+                        alertMessage = "Post-Evaluation - HTTP Status Code: \(httpResponse.statusCode)"
+                        showAlert = true
+                        return
+                    }
+                    
+                    alertMessage = "Post-Evaluation - HTTP Unknown error"
+                    showAlert = true
+                    
+                }
+                
+            }
+            
+            // Iniciar a tarefa
+            isLoading = true
+            loadingText = "Device Enrollment ..."
             task.resume()
             
         } // -- performAction
@@ -388,16 +497,17 @@ struct ToolkitView: View {
             }
 
             // Format the output as a dictionary with "evaluate-data" as the key
-            let formattedEvaluateData = ["evaluate-data": evaluateData]
+//            let formattedEvaluateData = ["evaluate-data": evaluateData]
 
             do {
-                // Convert the formatted data to a JSON string
-                let jsonData = try JSONSerialization.data(withJSONObject: formattedEvaluateData, options: [])
-                if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    return jsonString
-                } else {
+                let jsonData = try JSONSerialization.data(withJSONObject: evaluateData, options: [])
+                        
+                guard let jsonString = String(data: jsonData, encoding: .utf8) else {
                     throw ExtractionError.stringConversionFailed
                 }
+                // Create a dictionary with "evaluate-data" as the key and the jsonString as value
+                let formattedString = "\"evaluate-data\": \(jsonString)"
+                return formattedString
             } catch {
                 throw ExtractionError.jsonSerializationFailed(error)
             }
