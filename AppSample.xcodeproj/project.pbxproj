@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		FA02571A2BE184500086D77C /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FA0257192BE184500086D77C /* AppAuth */; };
 		FA02571C2BE184500086D77C /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = FA02571B2BE184500086D77C /* AppAuthCore */; };
-		FAE8BBAA2D2FEB0B0019B579 /* authfy-sdk-2.5.3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE8BBA92D2FEAF60019B579 /* authfy-sdk-2.5.3.xcframework */; };
-		FAE8BBAB2D2FEB0B0019B579 /* authfy-sdk-2.5.3.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAE8BBA92D2FEAF60019B579 /* authfy-sdk-2.5.3.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FAE3A6B02D569C5900D1AE20 /* AuthfySdk-2.3.5.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE3A6AE2D569C5600D1AE20 /* AuthfySdk-2.3.5.xcframework */; };
+		FAE3A6B12D569C5900D1AE20 /* AuthfySdk-2.3.5.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAE3A6AE2D569C5600D1AE20 /* AuthfySdk-2.3.5.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -20,7 +20,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FAE8BBAB2D2FEB0B0019B579 /* authfy-sdk-2.5.3.xcframework in Embed Frameworks */,
+				FAE3A6B12D569C5900D1AE20 /* AuthfySdk-2.3.5.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -29,7 +29,7 @@
 
 /* Begin PBXFileReference section */
 		FA67C1902BD000F00083FA5B /* AppSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		FAE8BBA92D2FEAF60019B579 /* authfy-sdk-2.5.3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = "authfy-sdk-2.5.3.xcframework"; sourceTree = "<group>"; };
+		FAE3A6AE2D569C5600D1AE20 /* AuthfySdk-2.3.5.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = "AuthfySdk-2.3.5.xcframework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -52,7 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAE8BBAA2D2FEB0B0019B579 /* authfy-sdk-2.5.3.xcframework in Frameworks */,
+				FAE3A6B02D569C5900D1AE20 /* AuthfySdk-2.3.5.xcframework in Frameworks */,
 				FA02571A2BE184500086D77C /* AppAuth in Frameworks */,
 				FA02571C2BE184500086D77C /* AppAuthCore in Frameworks */,
 			);
@@ -64,7 +64,7 @@
 		FA67C1872BD000F00083FA5B = {
 			isa = PBXGroup;
 			children = (
-				FAE8BBA92D2FEAF60019B579 /* authfy-sdk-2.5.3.xcframework */,
+				FAE3A6AE2D569C5600D1AE20 /* AuthfySdk-2.3.5.xcframework */,
 				FA12AF052D3032F000F33C7E /* AppSample */,
 				FAE8BBA12D2FE86F0019B579 /* Frameworks */,
 				FA67C1912BD000F00083FA5B /* Products */,
