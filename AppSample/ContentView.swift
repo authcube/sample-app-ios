@@ -20,6 +20,8 @@ struct ContentView: View {
     
     @State private var username = ""
     
+    @StateObject private var locationManager = LocationManager()
+    
     
     // callback
     func changeAuthenticationState(_ authorized: Bool) {
@@ -31,17 +33,6 @@ struct ContentView: View {
         
         self.username = viewModel.appDelegate.getUsername()
         
-        //        let backendTools = BackendTools()
-        //        backendTools.fetchUserInfo(viewModel.appDelegate) { username in
-        //            // Use the username here
-        //            print("Username: \(username)")
-        //
-        //            // If you need to update UI, make sure to dispatch to main thread
-        //            DispatchQueue.main.async {
-        //                // Update UI here
-        //                self.username = username
-        //            }
-        //        }
     }
     
     var body: some View {
@@ -70,6 +61,34 @@ struct ContentView: View {
                                     .cornerRadius(8)
                                 
                             }
+                            
+//                            Spacer()
+                            
+                            // --
+                            VStack {
+                                switch locationManager.authorizationStatus {
+                                case .notDetermined:
+                                    Text("Location access not determined")
+                                    Button("Request Location") {
+                                        locationManager.requestLocation()
+                                    }
+                                case .restricted:
+                                    Text("Location access restricted")
+                                case .denied:
+                                    Text("Location access denied")
+                                    Text("Please enable in Settings")
+                                case .authorizedWhenInUse, .authorizedAlways:
+                                    if let location = locationManager.location {
+                                        Text("Latitude: \(location.coordinate.latitude)")
+                                        Text("Longitude: \(location.coordinate.longitude)")
+                                    } else {
+                                        Text("Fetching location...")
+                                    }
+                                default:
+                                    Text("Unknown location status")
+                                }
+                            }
+                            // --
                             
                             Spacer()
                         }
@@ -114,6 +133,8 @@ struct ContentView: View {
                 .navigationBarBackButtonHidden(true)
                 .onAppear{
                     changeAuthenticationState(viewModel.appDelegate.isAuthorized())
+                    locationManager.requestLocation()
+
                 }
             
             // -- VStack
