@@ -110,6 +110,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    func decodeJWT(_ token: String) -> [String: Any]? {
+        let segments = token.components(separatedBy: ".")
+        guard segments.count > 1 else { return nil }
+    
+        var base64String = segments[1]
+        let requiredLength = Int(4 * ceil(Float(base64String.count) / 4.0))
+        let paddingLength = requiredLength - base64String.count
+        if paddingLength > 0 {
+            let padding = String(repeating: "=", count: paddingLength)
+            base64String += padding
+        }
+    
+        guard let data = Data(base64Encoded: base64String) else { return nil }
+    
+        do {
+            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
+            return jsonObject as? [String: Any]
+        } catch {
+            print("Error decoding JSON: \(error)")
+            return nil
+        }
+    }
+    
     func viewWillDisappear(_: Bool) {
         print("func viewWillDisappear(Bool)")
     }

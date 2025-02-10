@@ -20,6 +20,8 @@ struct ContentView: View {
     
     @State private var username = ""
     
+    @StateObject private var locationManager = LocationManager()
+    
     
     // callback
     func changeAuthenticationState(_ authorized: Bool) {
@@ -31,17 +33,6 @@ struct ContentView: View {
         
         self.username = viewModel.appDelegate.getUsername()
         
-        //        let backendTools = BackendTools()
-        //        backendTools.fetchUserInfo(viewModel.appDelegate) { username in
-        //            // Use the username here
-        //            print("Username: \(username)")
-        //
-        //            // If you need to update UI, make sure to dispatch to main thread
-        //            DispatchQueue.main.async {
-        //                // Update UI here
-        //                self.username = username
-        //            }
-        //        }
     }
     
     var body: some View {
@@ -70,6 +61,34 @@ struct ContentView: View {
                                     .cornerRadius(8)
                                 
                             }
+                            
+//                            Spacer()
+                            
+                            // --
+                            VStack {
+                                switch locationManager.authorizationStatus {
+                                case .notDetermined:
+                                    Text("Location access not determined")
+                                    Button("Request Location") {
+                                        locationManager.requestLocation()
+                                    }
+                                case .restricted:
+                                    Text("Location access restricted")
+                                case .denied:
+                                    Text("Location access denied")
+                                    Text("Please enable in Settings")
+                                case .authorizedWhenInUse, .authorizedAlways:
+                                    if let location = locationManager.location {
+                                        Text("Latitude: \(location.coordinate.latitude)")
+                                        Text("Longitude: \(location.coordinate.longitude)")
+                                    } else {
+                                        Text("Fetching location...")
+                                    }
+                                default:
+                                    Text("Unknown location status")
+                                }
+                            }
+                            // --
                             
                             Spacer()
                         }
@@ -114,6 +133,8 @@ struct ContentView: View {
                 .navigationBarBackButtonHidden(true)
                 .onAppear{
                     changeAuthenticationState(viewModel.appDelegate.isAuthorized())
+                    locationManager.requestLocation()
+
                 }
             
             // -- VStack
@@ -127,29 +148,5 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let _appDelegate = AppDelegate()
         ContentView(viewModel: AppSampleViewModel(appDelegate: _appDelegate))
-    }
-}
-
-//
-func decodeJWT(_ token: String) -> [String: Any]? {
-    let segments = token.components(separatedBy: ".")
-    guard segments.count > 1 else { return nil }
-    
-    var base64String = segments[1]
-    let requiredLength = Int(4 * ceil(Float(base64String.count) / 4.0))
-    let paddingLength = requiredLength - base64String.count
-    if paddingLength > 0 {
-        let padding = String(repeating: "=", count: paddingLength)
-        base64String += padding
-    }
-    
-    guard let data = Data(base64Encoded: base64String) else { return nil }
-    
-    do {
-        let jsonObject = try JSONSerialization.jsonObject(with: data, options: [])
-        return jsonObject as? [String: Any]
-    } catch {
-        print("Error decoding JSON: \(error)")
-        return nil
     }
 }
