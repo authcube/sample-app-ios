@@ -12,6 +12,14 @@ struct DeviceInformationView: View {
     @ObservedObject var viewModel: AppSampleViewModel
     
     @State private var deviceInformation: String = ""
+    @State private var generateJWE: Bool = false
+    
+    @State private var jwksKeys: KeysResponse? = nil
+    
+    @State private var errorMessage: String = ""
+    
+    // AppStorage
+    @AppStorage("url_idp") private var urlIdp: String = ""
     
     var body: some View {
         
@@ -19,18 +27,57 @@ struct DeviceInformationView: View {
             
             HeaderView()
             
-            Button {
+            HStack {
                 
-                self.deviceInformation = viewModel.appDelegate.authfySdk.getDeviceInfo()
+                Spacer()
                 
-            } label: {
-                Text("Collect Device Information")
-                    .padding()
-                    .frame(width: 250, height: 50)
+                Button {
+                    
+                    if ( generateJWE ) {
+                        
+                        if let keysResponse = jwksKeys {
+                            
+                            let jwks = keysResponse.keyJSON(forUse: "enc")
+                            
+                            if let encryptedInfo = try? viewModel.appDelegate.authfySdk.getEncryptedDeviceInfo(withJWKS: jwks!) {
+                                self.deviceInformation = encryptedInfo
+                            } else {
+                                print("Failed to get encrypted device info")
+                            }
+                        }
+                        
+                    } else {
+                        
+                        self.deviceInformation = viewModel.appDelegate.authfySdk.getDeviceInfo()
+                        
+                    }
+                    
+                } label: {
+                    Text("Collect Device Information")
+                        .padding()
+                        .frame(width: 250, height: 50)
+                }
+                .foregroundColor(Color(hex: "#F4F6F8"))
+                .background(Color(hex: "#333333"))
+                .cornerRadius(10)
+                
+                Spacer()
+                                
+                VStack {
+                    
+                    Text("Use JWE")
+                    
+                    Toggle("", isOn: $generateJWE)
+                        .tint(Color(hex: "#333333"))
+                        .padding(.horizontal)
+                        
+                } .frame(width: 80) // Ensure enough width so both elements stay aligned
+                    .alignmentGuide(.firstTextBaseline) { $0[.firstTextBaseline] } // Align to baseline
+                    .padding(.horizontal)
+                
+                Spacer()
             }
-            .foregroundColor(Color(hex: "#F4F6F8"))
-            .background(Color(hex: "#333333"))
-            .cornerRadius(10)
+           
             
             
             ScrollView {
@@ -47,9 +94,73 @@ struct DeviceInformationView: View {
             .padding()
         }// -- VStack
         .navigationTitle("Device Information")
+        .onAppear {
+            loadJwks()
+        }
+    } // end body
+    
+    
+    // #functions
+    func loadJwks() {
         
         
-    }
+//        let fixedUrl = urlIdp.components(separatedBy: "/").dropLast().joined(separator: "/")
+        let jwksEndpoint = URL(string: "\(urlIdp)/jwks")!
+        
+        let authState = viewModel.appDelegate.getAuthState()
+        
+        authState?.performAction() { (accessToken, idToken, error) in
+            
+            if error != nil  {
+                print("Error fetching fresh tokens: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            
+            // Add Bearer token to request
+            var urlRequest = URLRequest(url: jwksEndpoint)
+            urlRequest.httpMethod = "GET"
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            // Perform request...
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest) { data, response, error in
+                // Verifique se houve algum erro
+                if let error = error {
+                    print("Erro ao fazer a solicitação: \(error)")
+                    return
+                }
+                
+                // Verificar a resposta HTTP e status code
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                    // Tratar a resposta com sucesso
+                    
+                    if let data = data {
+                        // Supondo que a resposta seja um JSON
+                        do {
+                            // Tentar decodificar a resposta JSON, supondo uma estrutura básica
+                            let decoder = JSONDecoder()
+                            jwksKeys = try decoder.decode(KeysResponse.self, from: data)
+                            errorMessage = ""
+                        } catch {
+                            print("Erro ao decodificar JSON: \(error)")
+                            errorMessage = ""
+                        }
+                    }
+                } else {
+                    // Lidar com resposta HTTP diferente de 200 OK
+                    if let httpResponse = response as? HTTPURLResponse {
+                        print("HTTP Status Code: \(httpResponse.statusCode)")
+                        errorMessage = "Status Code: \(httpResponse.statusCode)"
+                    }
+                }
+            }
+            
+            // Iniciar a tarefa
+            task.resume()
+            
+        }
+    } // end loadJwks
 }
 
 #Preview {
