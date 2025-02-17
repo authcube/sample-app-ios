@@ -66,3 +66,8 @@ With the Project open, click on the "Play" Button, or use the shortcut "Command+
 ![](docs/images/settings-2.png)
 
 3. Click the "Back" arron on the Left Top of the Screen, and you will be good to go
+
+### SDK Documentation
+
+[Link](https://doc.sec4you.com.br/authfy-sdk/v2.5/pt-BR/) to SDK Documentation.
+
