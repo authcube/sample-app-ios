@@ -12,6 +12,8 @@ struct DashboardView: View {
     @ObservedObject var viewModel: AppSampleViewModel
     var changeAuthenticationState: (Bool) -> Void
     
+    @AppStorage("url_idp") private var urlIdp: String = ""
+    
     @State private var selectedTab = 0
     @State private var isShowingQrScanner = false
     
@@ -49,6 +51,7 @@ struct DashboardView: View {
             } // -- tab
             .accentColor(Color(hex: "#333333")) // Set the tab bar's accent color
             .navigationBarBackButtonHidden(true)
+            .padding(.vertical, 20)
             
             cameraButton()
             
@@ -118,7 +121,7 @@ struct DashboardView: View {
         // Positioning: Move the button up to overlay the TabView
         // Adjust the Y value (-30 is a starting point) as needed
         // to obtain the desired visual effect.
-        .offset(y: -tabBarHeight / 2 + 5) // Center vertically on the top edge and shift a little higher
+        .offset(y: -tabBarHeight / 2 - 5) // Center vertically on the top edge and shift a little higher
     } // -- cameraButton
     
     // Mark: - Perform Background Request
@@ -127,43 +130,73 @@ struct DashboardView: View {
         isLoading = true // show loading indicator during request
         feedbackMessage = nil
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET" // Exemplo: GET request
-        // request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            // GO BACK TO MAIN THREAD to update the UI (isLoading, feedbackMessage)
-            DispatchQueue.main.async {
-                self.isLoading = false // Esconde indicador
-                
-                // 1. Check network error
-                if let error = error {
-                    print("Request error: \(error.localizedDescription)")
-                    self.feedbackMessage = "Network error: \(error.localizedDescription)"
-                    return
-                }
-                
-                // 2. Check the HTTP response
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    print("Invalid response.")
-                    self.feedbackMessage = "Invalid response from server."
-                    return
-                }
-                
-                // 3. Check the status code of the response
-                print("Status Code: \(httpResponse.statusCode)")
-                if (200...299).contains(httpResponse.statusCode) {
-                    print("Request successful!")
-                    self.feedbackMessage = "Request sent successfully!"
-                } else {
-                    print("Server error: Status \(httpResponse.statusCode)")
-                    self.feedbackMessage = "Server error (Status: \(httpResponse.statusCode))."
+        viewModel.appDelegate.getAuthState()!.performAction() { (accessToken, idToken, error) in
+            
+            if error != nil  {
+                print("Error fetching fresh tokens: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            guard let accessToken = accessToken else {
+                return
+            }
+            
+            guard let urlIDP = URL(string :urlIdp) else {
+                print("IDP URL is invalid") // should never happen
+                feedbackMessage = "Error converting IDP url to an URL Object"
+                isLoading = false
+                return
+            }
+            
+            
+            if !url.hasSameBase(as: urlIDP) {
+                print("QRCode URL does not match with IDP URL FQDN")
+                self.feedbackMessage = "QRCode URL does not match with IDP URL FQDN"
+                isLoading = false
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET" // Exemplo: GET request
+            request.allHTTPHeaderFields = ["Authorization": "Bearer \(accessToken)"]
+            // request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                // GO BACK TO MAIN THREAD to update the UI (isLoading, feedbackMessage)
+                DispatchQueue.main.async {
+                    self.isLoading = false // Esconde indicador
+                    
+                    // 1. Check network error
+                    if let error = error {
+                        print("Request error: \(error.localizedDescription)")
+                        self.feedbackMessage = "Network error: \(error.localizedDescription)"
+                        return
+                    }
+                    
+                    // 2. Check the HTTP response
+                    guard let httpResponse = response as? HTTPURLResponse else {
+                        print("Invalid response.")
+                        self.feedbackMessage = "Invalid response from server."
+                        return
+                    }
+                    
+                    // 3. Check the status code of the response
+                    print("Status Code: \(httpResponse.statusCode)")
+                    if (200...299).contains(httpResponse.statusCode) {
+                        print("Request successful!")
+                        self.feedbackMessage = "Request sent successfully!"
+                    } else {
+                        print("Server error: Status \(httpResponse.statusCode)")
+                        self.feedbackMessage = "Server error (Status: \(httpResponse.statusCode))."
+                    }
                 }
             }
+            // Inicia a tarefa de rede
+            task.resume()
+            
         }
-        // Inicia a tarefa de rede
-        task.resume()
-    }
+        
+        
+    } // -- performBackgroundRequest
  
 }
 
@@ -253,6 +286,9 @@ class QRCodeScannerViewController: UIViewController, AVCaptureMetadataOutputObje
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
     weak var delegate: QRCodeScannerViewControllerDelegate?
+    
+    // draw square around qrcode
+    private var qrCodeHighlightLayer: CAShapeLayer?
     
     // flag to signalize to scanning is stopping
     private var isStopping = false
@@ -347,6 +383,9 @@ class QRCodeScannerViewController: UIViewController, AVCaptureMetadataOutputObje
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
         
+        // draw square
+        setupQRCodeHighlightLayer()
+        
         // Starts the session in the background
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             print("Starting AV session")
@@ -355,6 +394,25 @@ class QRCodeScannerViewController: UIViewController, AVCaptureMetadataOutputObje
         
         // Adds the Cancel Button
         addCancelButton()
+    }
+    
+    func setupQRCodeHighlightLayer() {
+        let highlightLayer = CAShapeLayer()
+        
+        // line color
+//        highlightLayer.strokeColor = UIColor.green.cgColor
+        highlightLayer.strokeColor = UIColor(hex: "#DA291C")!.cgColor
+        
+        // Line thickness
+        highlightLayer.lineWidth = 5
+        
+        // transparent box
+        highlightLayer.fillColor = UIColor.clear.cgColor
+        
+        // add this layer to view layer
+        // Make sure it is ABOVE the previewLayer
+        view.layer.addSublayer(highlightLayer)
+        self.qrCodeHighlightLayer = highlightLayer // Save the reference
     }
     
     func addCancelButton() {
@@ -381,8 +439,40 @@ class QRCodeScannerViewController: UIViewController, AVCaptureMetadataOutputObje
     }
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        
+        // Remove qualquer destaque anterior (limpa a caixa)
+        // Fazemos isso no início de cada chamada do delegate
+        DispatchQueue.main.async { // Garante execução na main thread para UI updates
+            self.qrCodeHighlightLayer?.path = nil
+        }
+        
         if let metadataObject = metadataObjects.first {
             guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
+            
+            
+            // --- START DRAW BOX ---
+            // Transforms the coordinates of the detected object to the coordinate system of the preview layer
+            guard let transformedObject = previewLayer?.transformedMetadataObject(for: readableObject) as? AVMetadataMachineReadableCodeObject else { return }
+            
+            // Creates the path for the box using the detected corners
+            let qrCodePath = UIBezierPath()
+            if !transformedObject.corners.isEmpty {
+                // Move to the first corner
+                qrCodePath.move(to: transformedObject.corners[0])
+                // Draw lines to the other corners
+                for i in 1..<transformedObject.corners.count {
+                    qrCodePath.addLine(to: transformedObject.corners[i])
+                }
+                // Close the path by returning to the first corner
+                qrCodePath.close()
+                
+                // Updates the highlight layer with the new path (in the main thread)
+                DispatchQueue.main.async {
+                    self.qrCodeHighlightLayer?.path = qrCodePath.cgPath
+                }
+            }
+            // --- END OF BOX ---
+            
             guard let stringValue = readableObject.stringValue else { return }
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate)) // Feedback
             stopScanningAndDismiss(withCode: stringValue)
