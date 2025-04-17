@@ -144,7 +144,7 @@ struct TotpView: View {
             // Iniciar a tarefa
             task.resume()
             
-        }
+        } // performaAction
         
     }
     

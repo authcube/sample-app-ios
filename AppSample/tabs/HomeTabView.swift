@@ -33,8 +33,10 @@ struct HomeTabView: View {
             .cornerRadius(10)
             
 
+            Text("")
+                .padding(.vertical, 25)
         }
-        .padding(.vertical)
+        .padding()
     }
 }
 
